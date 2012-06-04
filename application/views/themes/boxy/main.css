@@ -1,0 +1,511 @@
+/**
+ * LifePress Boxy CSS
+ *
+ * Table of Contents:
+ * Reset
+ * Typography
+ * Positioning
+ * Per-Domain Styling
+ * IE Fixes
+ * 3rd Party
+ */
+
+/**
+ * Reset
+ */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+/**
+ * Typography
+ */
+body {
+    font-family: "Lucida Grande", Arial, Helvetica, sans serif;
+    font-size: 12px;
+    color: #000;
+    line-height: 1.7em;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+a {
+    color: #3399ff;
+}
+
+a:hover {
+    color: #003399;
+}
+
+#aboutme h3 {
+    color: #333;
+}
+
+#navigation .current a, #navigation li a:hover {
+    color: black;
+}
+
+#activity_list .item .date, .original_link a, .activity_image_text span, .site_info a, #aboutme, .blog_cite, #single_header p, #navigation li a {
+    color: #999;
+}
+
+.vimeo_title a, .item.digg_com .item_inner a, #activity_list .item.youtube_com .item_inner a, #header h1 a {
+    color: white;
+}
+
+#activity_list .item.youtube_com .item_inner {
+    color: #fd8585;
+}
+
+.item.digg_com .item_inner {
+    color: #7698b7;
+}
+
+#explanation {
+    color: #999933;
+}
+
+#explanation strong {
+    color: #666633;
+}
+
+input.text_input {
+    font-size: 13px;
+}
+
+h2, #explanation, #single_container, #navigation li {
+    font-size: 15px;
+}
+
+#pagination, #single_container h3, #single_container h4, #single_container h5 {
+    font-size: 20px;
+}
+
+#single_container h2 {
+    font-size: 25px;
+}
+
+#activity_list .item .date {
+    font-size: 9px;
+}
+
+.blog_cite, .site_info, .date, .original_link, .activity_image_text, #aboutme, #footer, #activity_list .item.youtube_com .item_inner {
+    font-size: 10px;
+}
+
+.activity_image_text a, .twitter_tweet, .vimeo_title, .item.digg_com .item_inner a, #explanation strong, #pagination, #activity_list .item.youtube_com .item_inner a, #single_header, #single_container strong, ul.item_tag_list, #navigation li, .instructions strong {
+    font-weight: bold;
+}
+
+.original_link a, .activity_image_text a, .site_info a, .vimeo_title a, .item.digg_com .item_inner a, #activity_list .item.youtube_com .item_inner a, #navigation li a, #header h1 a {
+    text-decoration: none;
+}
+
+.original_link a:hover, .activity_image_text a:hover, .item.digg_com .item_inner a:hover {
+    text-decoration: underline;
+}
+
+.vimeo_title, #activity_list .item.youtube_com .item_inner {
+    text-align: center;
+}
+
+#single_header h2 {
+    line-height: 1.1em;
+}
+
+.activity_image_text {
+    line-height: 1.5em;
+}
+
+.twitter_tweet, #aboutme, #activity_list .item.youtube_com .item_inner {
+    line-height: 1.6em;
+}
+
+
+/**
+ * Positioning
+ */
+body {
+    background: white;
+}
+
+.center_box {
+    width: 980px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#header {
+    background: #99ccff;
+}
+
+#header .center_box {
+    height: 150px;
+}
+
+#header h1 {
+    position: absolute;
+    top: 50px;
+    left: 0;
+}
+
+#header h1 a {
+    border: 1px solid #b8dbfe;
+    border-style: none none solid none;
+}
+
+#header h1 a:hover {
+    border: 1px solid white;
+    border-style: none none solid none;
+}
+
+#navigation {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+#navigation li {
+    float: left;
+    margin-right: 1px;
+}
+
+#navigation li a {
+    float: left;
+    padding: 8px 15px;
+    background: white url(images/blogback.jpg) bottom left no-repeat;
+}
+
+#navigation .current a {
+    background: white;
+}
+
+#main_container {
+    margin: 15px 0 0 0;
+    width: 663px;
+    float: left;
+}
+
+#sidebar_container {
+    display: inline;
+    width: 300px;
+    float: left;
+    margin: 15px 0 0 15px;
+}
+
+.site_info {
+    padding: 3px 3px 3px 22px;
+}
+
+#activity_list {
+    float: left;
+}
+
+#activity_list .item {
+    width: 211px;
+    margin: 0 15px 15px 0;
+    float: left;
+    overflow: hidden;
+}
+
+.item_inner {
+    border: 1px solid #CCC;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+#activity_list .item.last {
+    margin-right: 0;
+}
+
+.item img, #single_container img {
+    display: block;
+}
+
+ul.item_tag_list li {
+    display: inline;
+}
+
+.clear {
+    clear: both;
+}
+
+#breadcrumb, #pagination {
+    margin-bottom: 15px;
+    padding: 3px;
+    border: 1px solid #CCC;
+    border-style: dotted none;
+}
+
+#pagination {
+    padding: 10px 0;
+}
+
+#sidebar_container h3 {
+    border: 1px solid #CCC;
+    border-style: none none solid none;
+    margin: 10px 0 5px 0;
+}
+
+#sidebar_container #aboutme_blurb h3 {
+    margin-top: 0;
+    border: none;
+}
+
+.tag_list li {
+    display: inline;
+    margin: 0 5px 0 0;
+}
+
+#comments_container {
+    border: 1px solid #EEE;
+    border-style: solid none none none;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.ad_container img {
+    display: block;
+}
+
+.ad_container.bottom {
+    margin: 15px 0;
+}
+
+#search_form {
+    margin: 8px 0 0 0;
+}
+
+#mailing_list {
+    margin-top: 15px;
+    background: white url(images/mailinglist.gif) 0 0 no-repeat;
+    border: 1px solid #CCC;
+}
+
+#mailing_list p {
+    padding: 70px 10px 10px 10px;
+}
+
+.text_input {
+    background: #FFFFCC;
+    width: 180px;
+}
+
+#explanation {
+    background: #FFFFCC;
+    padding: 10px;
+    margin: 15px 0;
+}
+
+#aboutme_blurb {
+    width: 180px;
+    border: 1px solid #EEE;
+    border-style: none solid none none;
+    padding: 0 15px 0 0;
+    float: left;
+    margin-right: 15px;
+}
+
+#aboutme ul {
+    list-style-type: disc;
+}
+
+#aboutme ul li {
+    padding-bottom: 5px;
+}
+
+#aboutme h3, #aboutme ul, #aboutme p {
+    margin-left: 20px;
+}
+
+#aboutme h3 {
+    margin-bottom: 5px;
+}
+
+.sidebar_small_banner img {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#footer {
+    clear: both;
+}
+
+#footer {
+    background: #EEE;
+    padding: 8px;
+    position: relative;
+}
+
+#credits {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+}
+
+#single_header {
+    padding: 10px 0 15px 0;
+}
+
+#single_content p, #single_container object, #single_container img, #single_container ul, #single_container ol {
+    margin-bottom: 15px;
+}
+
+#single_container img {
+    border: 1px solid #CCC;
+    padding: 5px;
+}
+
+#single_container h3, #single_container h4, #single_container h5 {
+    border: 1px solid #CCC;
+    border-style: none none dotted none;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    margin-top: 25px;
+}
+
+#original_permalink span {
+    background: #FFFFCC;
+}
+
+.activity_list_inner img {
+    float: left;
+    margin-right: 10px;
+}
+
+.activity_item {
+    clear: both;
+}
+
+/**
+ * Per-Domain Styling
+ */
+.item.flickr_com {
+    background: white url(images/flickrlogo.gif) center center no-repeat;
+}
+
+.item.flickr_com .site_info {
+    background: blue;
+}
+
+.item.vimeo_com .item_inner {
+    background: #80ceff url(images/vimeoback.jpg) bottom center no-repeat;
+}
+
+.item.vimeo_com .item_inner object {
+    border: 1px solid white;
+    border-style: none none solid none;
+}
+
+#activity_list .item.twitter_com .item_inner {
+    background: url(images/twitterback.jpg);
+}
+
+.vimeo_title a {
+    border: 1px solid #a7dafa;
+    border-style: none none solid none;
+}
+
+.vimeo_title a:hover {
+    border: 1px solid white;
+    border-style: none none solid none;
+}
+
+.twitter_user {
+    margin: 10px 0 0 10px;
+    padding-bottom: 10px;
+    background: transparent url(images/twittertail.gif) bottom 60px no-repeat;
+}
+
+.twitter_user img {
+    display: block;
+    border: 1px solid #999;
+}
+
+.twitter_tweet {
+    background: white;
+    padding: 8px 10px;
+    overflow: hidden;
+    background: white url(images/twitterdither.gif) bottom left repeat-x;
+    border: 1px solid #DDD;
+    border-style: none none solid none;
+    margin: 0 10px;
+}
+
+#activity_list .item.digg_com .item_inner {
+    background: #1b5790 url(images/diggback.gif) bottom right no-repeat;
+}
+
+.item.digg_com .item_inner a {
+    border: 1px solid #7698b7;
+    border-style: none none dotted none;
+    display: block;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.inner_container {
+    padding: 8px 10px;
+}
+
+#activity_list .item.youtube_com .item_inner {
+    background: #FE3333 url(images/youtubeback.gif) bottom left repeat-x;
+}
+
+#activity_list .item.youtube_com .item_inner object {
+    border: 1px solid white;
+    border-style: none none solid none;
+    margin-bottom: 7px;
+}
+
+#activity_list .item.youtube_com .item_inner p {
+    padding: 0 10px;
+}
+
+#activity_list .item.youtube_com .item_inner a {
+    border: 1px solid #f07777;
+    border-style: none none solid none;
+}
+
+#activity_list .item.youtube_com .item_inner a:hover {
+    border: 1px solid white;
+    border-style: none none solid none;
+}
+
+.blog_title, .blog_cite {
+    margin: 15px 0 20px 0;
+}
+
+.activity_image {
+    display: block;
+    height: 250px;
+}
+
+.activity_image_text {
+    position: absolute;
+    top: 0;
+    padding: 3px 5px;
+    background: black;
+}
+
+.instructions code {
+    background: #FFFFCC;
+}
+
+
+/**
+ * IE Fixes
+ */
+body {
+    word-wrap: break-word;
+}
+
+
+/**
+ * 3rd Party
+ */

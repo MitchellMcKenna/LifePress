@@ -1,0 +1,145 @@
+/**
+ * LifePress Boxy CSS
+ *
+ * Table of Contents:
+ * Reset
+ * Typography
+ * Positioning
+ * IE Fixes
+ * 3rd Party
+ */
+
+/**
+ * Reset
+ */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h2, #pagination {
+    font-size: 15px;
+}
+
+.site_info, .date, .original_link {
+    font-size: 10px;
+}
+
+.original_link a {
+    color: #999;
+    text-decoration: none;
+}
+
+
+/**
+ * Typography
+ */
+body {
+	font-family: "Lucida Grande", Arial, Helvetica, sans serif;
+	font-size: 12px;
+	color: #333;
+	line-height: 1.7em;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+
+/**
+ * Positioning
+ */
+body {
+    background: white;
+}
+
+.center_box {
+    width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#header {
+    padding: 20px 0;
+    border: 2px solid #EEE;
+    border-style: none none solid none;
+}
+
+#navigation {
+    position: absolute;
+    right: 0;
+}
+
+#navigation li {
+    display: inline;
+    margin-left: 10px;
+}
+
+#main_container {
+    padding: 20px 20px 0 0;
+    width: 508px;
+    float: left;
+}
+
+#sidebar_container {
+    display: inline;
+    width: 250px;
+    float: left;
+    background: #F8F8F8;
+    border: 1px solid #EEE;
+    margin: 20px 0 0 0;
+    padding: 10px;
+}
+
+.site_info {
+    padding-left: 20px;
+}
+
+#activity_list .item {
+    margin-bottom: 20px;
+}
+
+.item img, #single_container img {
+    display: block;
+    border: 1px solid #CCC;
+    padding: 3px;
+    margin: 5px 0;
+}
+
+.item_tag_list li {
+    display: inline;
+}
+
+#breadcrumb, #pagination {
+    background: #FFFFCC;
+    margin-bottom: 20px;
+    padding: 3px;
+}
+
+#sidebar_container h3 {
+    border: 1px solid #CCC;
+    border-style: none none solid none;
+    margin: 10px 0 5px 0;
+}
+
+.tag_list li {
+    display: inline;
+    margin: 0 5px 0 0;
+}
+
+#comments_container {
+    border: 1px solid #EEE;
+    border-style: solid none none none;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+
+/**
+ * IE Fixes
+ */
+
+
+/**
+ * 3rd Party
+ */

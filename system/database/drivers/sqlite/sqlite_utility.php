@@ -1,138 +1,51 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * CodeIgniter
  *
- * An open source application development framework for PHP 4.3.2 or newer
+ * An open source application development framework for PHP 5.2.4 or newer
+ *
+ * NOTICE OF LICENSE
+ *
+ * Licensed under the Open Software License version 3.0
+ *
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
  *
  * @package		CodeIgniter
- * @author		ExpressionEngine Dev Team
- * @copyright	Copyright (c) 2008 - 2009, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2012, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
  */
 
-// ------------------------------------------------------------------------
-
 /**
  * SQLite Utility Class
  *
  * @category	Database
- * @author		ExpressionEngine Dev Team
+ * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
 class CI_DB_sqlite_utility extends CI_DB_utility {
 
-	/**
-	 * List databases
-	 *
-	 * I don't believe you can do a database listing with SQLite
-	 * since each database is its own file.  I suppose we could
-	 * try reading a directory looking for SQLite files, but
-	 * that doesn't seem like a terribly good idea
-	 *
-	 * @access	private
-	 * @return	bool
-	 */
-	function _list_databases()
-	{
-		if ($this->db_debug)
-		{
-			return $this->display_error('db_unsuported_feature');
-		}
-		return array();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Optimize table query
-	 *
-	 * Is optimization even supported in SQLite?
-	 *
-	 * @access	private
-	 * @param	string	the table name
-	 * @return	object
-	 */
-	function _optimize_table($table)
-	{
-		return FALSE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Repair table query
-	 *
-	 * Are table repairs even supported in SQLite?
-	 *
-	 * @access	private
-	 * @param	string	the table name
-	 * @return	object
-	 */
-	function _repair_table($table)
-	{
-		return FALSE;
-	}
-
-	// --------------------------------------------------------------------
+	protected $_list_databases	= FALSE;
 
 	/**
 	 * SQLite Export
 	 *
-	 * @access	private
 	 * @param	array	Preferences
 	 * @return	mixed
 	 */
-	function _backup($params = array())
+	protected function _backup($params = array())
 	{
 		// Currently unsupported
 		return $this->db->display_error('db_unsuported_feature');
-	}
-
-	/**
-	 *
-	 * The functions below have been deprecated as of 1.6, and are only here for backwards
-	 * compatibility.  They now reside in dbforge().  The use of dbutils for database manipulation
-	 * is STRONGLY discouraged in favour if using dbforge.
-	 *
-	 */
-
-	/**
-	 * Create database
-	 *
-	 * @access	public
-	 * @param	string	the database name
-	 * @return	bool
-	 */
-	function _create_database()
-	{
-		// In SQLite, a database is created when you connect to the database.
-		// We'll return TRUE so that an error isn't generated
-		return TRUE;
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Drop database
-	 *
-	 * @access	private
-	 * @param	string	the database name
-	 * @return	bool
-	 */
-	function _drop_database($name)
-	{
-		if ( ! @file_exists($this->db->database) OR ! @unlink($this->db->database))
-		{
-			if ($this->db->db_debug)
-			{
-				return $this->db->display_error('db_unable_to_drop');
-			}
-			return FALSE;
-		}
-		return TRUE;
 	}
 
 }

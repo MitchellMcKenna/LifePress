@@ -1,4 +1,29 @@
 <?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP 5.2.4 or newer
+ *
+ * NOTICE OF LICENSE
+ * 
+ * Licensed under the Open Software License version 3.0
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0) that is
+ * bundled with this package in the files license.txt / license.rst.  It is
+ * also available through the world wide web at this URL:
+ * http://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to obtain it
+ * through the world wide web, please send an email to
+ * licensing@ellislab.com so we can send you a copy immediately.
+ *
+ * @package		CodeIgniter
+ * @author		EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2012, EllisLab, Inc. (http://ellislab.com/)
+ * @license		http://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * @link		http://codeigniter.com
+ * @since		Version 1.0
+ * @filesource
+ */
 
 $lang['db_invalid_connection_str'] = 'Unable to determine the database settings based on the connection string you submitted.';
 $lang['db_unable_to_connect'] = 'Unable to connect to your database server using the provided settings.';
@@ -6,8 +31,9 @@ $lang['db_unable_to_select'] = 'Unable to select the specified database: %s';
 $lang['db_unable_to_create'] = 'Unable to create the specified database: %s';
 $lang['db_invalid_query'] = 'The query you submitted is not valid.';
 $lang['db_must_set_table'] = 'You must set the database table to be used with your query.';
-$lang['db_must_set_database'] = 'You must set the database name in your database config file.';
 $lang['db_must_use_set'] = 'You must use the "set" method to update an entry.';
+$lang['db_must_use_index'] = 'You must specify an index to match on for batch updates.';
+$lang['db_batch_missing_index'] = 'One or more rows submitted for batch updating is missing the specified index.';
 $lang['db_must_use_where'] = 'Updates are not allowed unless they contain a "where" clause.';
 $lang['db_del_must_use_where'] = 'Deletes are not allowed unless they contain a "where" or "like" clause.';
 $lang['db_field_param_missing'] = 'To fetch fields requires the name of the table as a parameter.';
