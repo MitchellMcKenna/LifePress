@@ -68,37 +68,37 @@ class Feeds extends MY_Auth_Controller {
         if ($_POST) {
             if ($this->input->post('url') == 'http://') {
                 $_POST['url'] = '';
-        }
-
-        $this->form_validation->set_rules('url', 'Url', 'trim|required|xss_clean|callback__test_feed');
-
-        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('admin/_header', $data);
-            $this->load->view('admin/feed_add', $data);
-        } else {
-            $new->feed_title = $this->simplepie->get_title();
-            $new->feed_icon = $this->simplepie->get_favicon();
-            $new->feed_url = $this->input->post('url', TRUE);
-            $new->feed_status = 'active';
-
-            // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
-            $url = parse_url($this->simplepie->get_permalink());
-            if (!$url['host']) {
-                $url = parse_url($this->input->post('url', TRUE));
             }
-            if (substr($url['host'], 0, 4) == 'www.') {
-                $new->feed_domain = substr($url['host'], 4);
+
+            $this->form_validation->set_rules('url', 'Url', 'trim|required|xss_clean|callback__test_feed');
+
+            $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+
+            if ($this->form_validation->run() == FALSE) {
+                $this->load->view('admin/_header', $data);
+                $this->load->view('admin/feed_add', $data);
             } else {
-                $new->feed_domain = $url['host'];
+                $new->feed_title = $this->simplepie->get_title();
+                $new->feed_icon = $this->simplepie->get_favicon();
+                $new->feed_url = prep_url($this->input->post('url', TRUE));
+                $new->feed_status = 'active';
+
+                // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
+                $url = parse_url($this->simplepie->get_permalink());
+                if (!$url['host']) {
+                    $url = parse_url($this->input->post('url', TRUE));
+                }
+                if (substr($url['host'], 0, 4) == 'www.') {
+                    $new->feed_domain = substr($url['host'], 4);
+                } else {
+                    $new->feed_domain = $url['host'];
+                }
+                if (!$new->feed_icon) {
+                    $new->feed_icon = 'http://'.$new->feed_domain.'/favicon.ico';
+                }
+                $this->feed_model->add_feed($new);
+                header('Location: '.$this->config->item('base_url').'admin/feeds');
             }
-            if (!$new->feed_icon) {
-                $new->feed_icon = 'http://'.$new->feed_domain.'/favicon.ico';
-            }
-            $this->feed_model->add_feed($new);
-            header('Location: '.$this->config->item('base_url').'admin/feeds');
-        }
         } else {
             $this->load->view('admin/_header', $data);
             $this->load->view('admin/feed_add', $data);
