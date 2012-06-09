@@ -108,12 +108,17 @@ class Feeds extends MY_Auth_Controller {
 
     public function test_feed($url)
     {
+        if ( ! filter_var($url, FILTER_VALIDATE_URL)) {
+            $this->form_validation->set_message('test_feed', 'Invalid url');
+            return FALSE;
+        }
+
         $this->simplepie->set_feed_url($url);
         $this->simplepie->enable_cache(FALSE);
         $this->simplepie->init();
 
         if ($this->simplepie->error()) {
-            $this->form_validation->set_message('_test_feed', $this->simplepie->error());
+            $this->form_validation->set_message('test_feed', $this->simplepie->error());
             return FALSE;
         }
 
@@ -125,7 +130,7 @@ class Feeds extends MY_Auth_Controller {
                 $this->db->update('feeds', array('feed_status' => 'active'), array('feed_id' => $feed->feed_id));
                 redirect('admin/feeds', 'location');
             } else {
-                $this->form_validation->set_message('_test_feed', 'You already added that feed...');
+                $this->form_validation->set_message('test_feed', 'You already added that feed...');
                 return FALSE;
             }
         }
