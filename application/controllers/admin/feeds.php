@@ -70,7 +70,7 @@ class Feeds extends MY_Auth_Controller {
                 $_POST['url'] = '';
             }
 
-            $this->form_validation->set_rules('url', 'Url', 'trim|required|xss_clean|callback__test_feed');
+            $this->form_validation->set_rules('url', 'Url', 'trim|required|xss_clean|prep_url|callback__test_feed');
 
             $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
@@ -80,7 +80,7 @@ class Feeds extends MY_Auth_Controller {
             } else {
                 $new->feed_title = $this->simplepie->get_title();
                 $new->feed_icon = $this->simplepie->get_favicon();
-                $new->feed_url = prep_url($this->input->post('url', TRUE));
+                $new->feed_url = $this->input->post('url', TRUE);
                 $new->feed_status = 'active';
 
                 // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
@@ -115,7 +115,7 @@ class Feeds extends MY_Auth_Controller {
 
     function _test_feed($url)
     {
-        $this->simplepie->set_feed_url(prep_url($url));
+        $this->simplepie->set_feed_url($url);
         $this->simplepie->enable_cache(FALSE);
         $this->simplepie->init();
 
