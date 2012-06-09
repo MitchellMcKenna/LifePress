@@ -78,7 +78,7 @@ class Write extends MY_Auth_Controller {
         if ($_POST) {
             $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
             $this->form_validation->set_rules('date', 'Date', 'trim|xss_clean');
-            $this->form_validation->set_rules('content', 'Content', 'trim|xss_clean');
+            $this->form_validation->set_rules('content', 'Content', 'trim');
             $this->form_validation->set_rules('tags', 'Tags', 'trim|xss_clean');
 
             $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
