@@ -50,7 +50,7 @@ class Feeds extends MY_Auth_Controller {
         $this->load->helper(array('form', 'url'));
     }
 
-    function index()
+    public function index()
     {
         $data->page_name = 'Feeds';
 
@@ -61,83 +61,82 @@ class Feeds extends MY_Auth_Controller {
         $this->load->view('admin/_footer');
     }
 
-    function add()
+    public function add()
     {
         $data->page_name = 'Add Feed';
 
-        if ($_POST) {
-            if ($this->input->post('url') == 'http://') {
-                $_POST['url'] = '';
-        }
-
-        $this->form_validation->set_rules('url', 'Url', 'trim|required|xss_clean|callback__test_feed');
-
+        $this->form_validation->set_rules('url', 'Url', 'trim|prep_url|required|xss_clean|callback_test_feed');
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('admin/_header', $data);
-            $this->load->view('admin/feed_add', $data);
-        } else {
-            $new->feed_title = $this->simplepie->get_title();
-            $new->feed_icon = $this->simplepie->get_favicon();
-            $new->feed_url = $this->input->post('url', TRUE);
-            $new->feed_status = 'active';
+        if ($this->form_validation->run()) {
+            $feed = array(
+                'feed_title' => $this->simplepie->get_title(),
+                'feed_icon' => $this->simplepie->get_favicon(),
+                'feed_url' => $this->input->post('url', TRUE),
+                'feed_status' => 'active'
+            );
 
             // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
             $url = parse_url($this->simplepie->get_permalink());
-            if (!$url['host']) {
+            if ( ! $url['host']) {
                 $url = parse_url($this->input->post('url', TRUE));
             }
-            if (substr($url['host'], 0, 4) == 'www.') {
-                $new->feed_domain = substr($url['host'], 4);
+            if (substr($url['host'], 0, 4) === 'www.') {
+                $feed['feed_domain'] = substr($url['host'], 4);
             } else {
-                $new->feed_domain = $url['host'];
+                $feed['feed_domain'] = $url['host'];
             }
-            if (!$new->feed_icon) {
-                $new->feed_icon = 'http://'.$new->feed_domain.'/favicon.ico';
+
+            if (!$feed['feed_icon']) {
+                $feed['feed_icon'] = 'http://'.$feed['feed_domain'].'/favicon.ico';
             }
-            $this->feed_model->add_feed($new);
-            header('Location: '.$this->config->item('base_url').'admin/feeds');
-        }
-        } else {
-            $this->load->view('admin/_header', $data);
-            $this->load->view('admin/feed_add', $data);
+
+            $this->feed_model->add_feed($feed);
+            redirect('admin/feeds', 'location');
         }
 
+        $this->load->view('admin/_header', $data);
+        $this->load->view('admin/feed_add', $data);
         $this->load->view('admin/_footer');
     }
 
-    function delete($feed_id)
+    public function delete($feed_id)
     {
         $this->feed_model->delete_feed($feed_id);
-        header('Location: '.$this->config->item('base_url').'admin/feeds');
+        redirect('admin/feeds', 'location');
     }
 
-    function _test_feed($url)
+    public function test_feed($url)
     {
-        $this->simplepie->set_feed_url(prep_url($url));
+        if ( ! filter_var($url, FILTER_VALIDATE_URL)) {
+            $this->form_validation->set_message('test_feed', 'Invalid url');
+            return FALSE;
+        }
+
+        $this->simplepie->set_feed_url($url);
         $this->simplepie->enable_cache(FALSE);
         $this->simplepie->init();
 
-        // Check if already in the db
-        if ($this->db->get_where('feeds', array('feed_url' => $url))->row()) {
-            // If it was a deleted feed just reactivate it and forward to feed page
-            $feed = $this->db->get_where('feeds', array('feed_url' => $url))->row();
-            if ($feed->feed_status == 'deleted') {
-                $this->db->update('feeds', array('feed_status' => 'active'), array('feed_id' => $feed->feed_id));
-                header('Location: '.$this->config->item('base_url').'admin/feeds');
-                exit();
-            } else {
-                $this->form_validation->set_message('_test_feed', 'You already added that feed...');
-                return false;
-            }
-        } else if ($this->simplepie->error()) {
-            $this->form_validation->set_message('_test_feed', $this->simplepie->error());
-            return false;
-        } else {
-            // Looks like the feed is ok
-            return true;
+        if ($this->simplepie->error()) {
+            $this->form_validation->set_message('test_feed', $this->simplepie->error());
+            return FALSE;
         }
+
+        // Check if already in the db
+        $feed = $this->db->get_where('feeds', array('feed_url' => $url))->row();
+        if ($feed) {
+            // If it was a deleted feed just reactivate it and forward to feed page
+            if ($feed->feed_status === 'deleted') {
+                $this->db->update('feeds', array('feed_status' => 'active'), array('feed_id' => $feed->feed_id));
+                redirect('admin/feeds', 'location');
+            } else {
+                $this->form_validation->set_message('test_feed', 'You already added that feed...');
+                return FALSE;
+            }
+        }
+
+        // Looks like the feed is ok
+        return TRUE;
     }
 }
 
