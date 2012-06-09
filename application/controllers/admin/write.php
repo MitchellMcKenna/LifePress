@@ -102,6 +102,8 @@ class Write extends MY_Auth_Controller {
                     if (!empty($tags)) {
                         $new_post->item_data['tags'] = $tags;
                     }
+                } else {
+                    $new_post->item_data['tags'] = array();
                 }
 
                 $new_post->item_title = $this->input->post('title', TRUE);

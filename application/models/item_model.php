@@ -341,10 +341,10 @@ class Item_model extends CI_Model {
     {
         $this->db->delete('tag_relationships', array('item_id' => $item_id));
 
+        // Nuke all item tags from orbit. It's the only way to be sure.
         $this->clean_tags();
 
         if (isset($tags[0])) {
-            // Nuke all item tags from orbit. It's the only way to be sure.
             foreach ($tags as $tag) {
                 // Lets just get rid of some typical meh stuff from tags
                 $disallow = array('(',')',',','.','*','\'','"','|');
