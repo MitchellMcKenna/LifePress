@@ -6,14 +6,16 @@ class Youtube_com {
 
     function pre_db($item, $original)
     {
+        // If content is not automatically found, try to grab it from enclosure description
+        if (empty($item->item_content) && !empty($item->item_data['enclosures'][0]->description)) {
+		    $item->item_content	= $item->item_data['enclosures'][0]->description;
+        }
 
-        // Youtube stuffs the content with a bunch of things I don't want!
-        // So lets get rid of it...
-        $content = explode('Author:', $item->item_content);
-        $item->item_content = $content[0];
+        // If image is not automatically found, try to grab it from enclosure thumbnails
+        if (empty($item->item_data['image']) && !empty($item->item_data['enclosures'][0]->thumbnails[0])) {
+            $item->item_data['image'] = $item->item_data['enclosures'][0]->thumbnails[0];
+        }
 
-        // Looky, youtube has an image too
-        $item->item_data['image'] = $item->item_data['enclosures'][0]->thumbnails[0];
         return $item;
     }
 

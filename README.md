@@ -20,7 +20,7 @@ LifePress has been rewritten to work on CodeIgniter 2.1. Sweetcron was written o
 If you want LifePress in a sub folder (e.g. example.com/lifestream/), you will need to make these extra changes:
 
 1. In config.php make sure the base\_url is the full url path to your LifePress install, i.e. including subfolder.
-2. Open the .htaccess file found at the base of LifePress and change ```RewriteBase /``` to ```RewriteBase /<YOUR\_SUBFOLDER>```
+2. Open the .htaccess file found at the base of LifePress and change ```RewriteBase /``` to ```RewriteBase /<YOUR_SUBFOLDER>```
 
 ### Pseudo Cron vs Cron Job
 
