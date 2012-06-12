@@ -63,15 +63,26 @@ class Lifepress {
         $feeds = $this->CI->feed_model->get_active_feeds();
         if ($feeds) {
             foreach ($feeds as $feed) {
-                $this->CI->simplepie->set_feed_url($feed->feed_url);
-                $this->CI->simplepie->enable_cache(FALSE);
-                $this->CI->simplepie->init();
-
-                $items = $this->CI->simplepie->get_items();
-
-                $this->add_new_items($items, $feed);
+                $this->fetch_item((array)$feed);
             }
         }
+    }
+
+    /**
+     * Fetch items from a feed and store them in the database.
+     *
+     * @param [] $feed Feed to fetch items for
+     *
+     * @return void
+     */
+    public function fetch_item($feed) {
+        $this->CI->simplepie->set_feed_url($feed['feed_url']);
+        $this->CI->simplepie->enable_cache(FALSE);
+        $this->CI->simplepie->init();
+
+        $items = $this->CI->simplepie->get_items();
+
+        $this->add_new_items($items, $feed);
     }
 
     function add_new_items($items, $feed)
@@ -93,9 +104,9 @@ class Lifepress {
             $new->item_permalink = $item->get_permalink();
             $new->item_content = $this->CI->security->xss_clean(trim(strip_tags($item->get_content())));
             $new->item_name = url_title($new->item_title);
-            $new->item_feed_id = $feed->feed_id;
+            $new->item_feed_id = $feed['feed_id'];
 
-            $new = $this->extend('pre_db', $feed->feed_domain, $new, $item);
+            $new = $this->extend('pre_db', $feed['feed_domain'], $new, $item);
 
             $this->CI->item_model->add_item($new);
         }

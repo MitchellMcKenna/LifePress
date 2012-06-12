@@ -91,7 +91,13 @@ class Feeds extends MY_Auth_Controller {
                 $feed['feed_icon'] = 'http://'.$feed['feed_domain'].'/favicon.ico';
             }
 
+            // Add new feed to database
             $this->feed_model->add_feed($feed);
+
+            // Retrieve the id of the new and fetch items for the feed.
+            $feed['feed_id'] = $this->db->insert_id();
+            $this->lifepress->fetch_item($feed);
+
             redirect('admin/feeds', 'location');
         }
 
