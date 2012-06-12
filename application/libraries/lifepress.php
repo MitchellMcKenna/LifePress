@@ -63,7 +63,7 @@ class Lifepress {
         $feeds = $this->CI->feed_model->get_active_feeds();
         if ($feeds) {
             foreach ($feeds as $feed) {
-                $this->fetch_item($feed);
+                $this->fetch_item((array)$feed);
             }
         }
     }
@@ -71,16 +71,11 @@ class Lifepress {
     /**
      * Fetch items from a feed and store them in the database.
      *
-     * @param  Feed_model $feed Feed to fetch items for
+     * @param [] $feed Feed to fetch items for
      *
      * @return void
      */
     public function fetch_item($feed) {
-        if (!is_array($feed)) {
-            // Convert feed from stdClass to an array for a consistent interface.
-            $feed = (array)$feed;
-        }
-
         $this->CI->simplepie->set_feed_url($feed['feed_url']);
         $this->CI->simplepie->enable_cache(FALSE);
         $this->CI->simplepie->init();
