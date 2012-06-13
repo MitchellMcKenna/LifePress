@@ -54,7 +54,7 @@ class Feeds extends MY_Auth_Controller {
     {
         $data->page_name = 'Feeds';
 
-        $data->feeds = $this->feed_model->get_active_feeds();
+        $data->feeds = $this->feed_model->get_active_feeds(TRUE);
 
         $this->load->view('admin/_header', $data);
         $this->load->view('admin/feeds', $data);
@@ -92,10 +92,9 @@ class Feeds extends MY_Auth_Controller {
             }
 
             // Add new feed to database
-            $this->feed_model->add_feed($feed);
+            $feed = $this->feed_model->add_feed($feed);
 
-            // Retrieve the id of the new and fetch items for the feed.
-            $feed['feed_id'] = $this->db->insert_id();
+            // Fetch items for the feed.
             $this->lifepress->fetch_item($feed);
 
             redirect('admin/feeds', 'location');

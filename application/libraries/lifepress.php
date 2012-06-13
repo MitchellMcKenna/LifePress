@@ -284,7 +284,7 @@ class Lifepress {
         }
 
         $data->blog_posts = $this->CI->item_model->get_items_by_feed_domain(0, 10, 'lifepress', $public);
-        $data->active_feeds = $this->CI->feed_model->get_active_feeds(TRUE);
+        $data->active_feeds = $this->CI->feed_model->get_active_feed_domains();
         $data->popular_tags = $this->CI->tag_model->get_all_tags('count', 50);
         $data->all_tags = $this->CI->tag_model->get_all_tags('count');
         $data->page_type = $type;

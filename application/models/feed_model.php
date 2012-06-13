@@ -47,48 +47,110 @@ class Feed_model extends CI_Model {
         parent::__construct();
     }
 
-    function _process($feeds)
+    /**
+     * Get all feeds (active and inactive)
+     *
+     * @param bool $include_count Whether to include feed's item count
+     * @return array
+     */
+    public function get_feeds($include_count = false)
     {
-        if ($feeds) {
-            foreach ($feeds as $key => $value) {
-                $feeds[$key]->item_count = $this->db->select('ID')->get_where('items', array('item_status !=' => 'deleted', 'item_feed_id' => $feeds[$key]->feed_id))->num_rows();
-            }
-
-            return $feeds;
+        if ($include_count) {
+            return $this->db->select('feeds.*, count(*) AS item_count')
+                ->from('feeds')
+                ->join('items', 'items.item_feed_id = feeds.feed_id')
+                ->group_by('feeds.feed_id')
+                ->get()
+                ->result();
         } else {
-            return array();
+            return $this->db->get('feeds')->result();
         }
     }
 
-    function get_feeds()
+    /**
+     * Get count of active feeds
+     *
+     * @return int
+     */
+    public function count_active_feeds()
     {
-        return $this->_process($this->db->get('feeds')->result());
+            return $this->db->get_where('feeds', array('feed_status' => 'active'))->num_rows();
     }
 
-    function count_active_feeds()
+    /**
+     * Get active feeds
+     *
+     * @param bool $include_count Whether to include feed's item count
+     * @return array
+     */
+    public function get_active_feeds($include_count = FALSE)
     {
-        return $this->db->get_where('feeds', array('feed_status' => 'active'))->num_rows();
-    }
-
-    function get_active_feeds($group = FALSE)
-    {
-        if ($group) {
-            return $this->_process($this->db->group_by('feed_domain')->get_where('feeds', array('feed_status' => 'active'))->result());
+        if ($include_count) {
+            return $this->db->select('feeds.*, count(*) AS item_count')
+                ->from('feeds')
+                ->join('items', 'items.item_feed_id = feeds.feed_id')
+                ->where(array('feeds.feed_status' => 'active', 'items.item_status !=' => 'deleted'))
+                ->group_by('feeds.feed_id')
+                ->get()
+                ->result();
         } else {
-            return $this->_process($this->db->get_where('feeds', array('feed_status' => 'active'))->result());
+            return $this->db
+                ->get_where('feeds', array('feed_status' => 'active'))
+                ->result();
         }
     }
 
-    function add_feed($feed)
+    /**
+     * Get active feed grouped by domain name
+     *
+     * @return array
+     */
+    public function get_active_feed_domains()
+    {
+        return $this->db
+            ->select('feed_domain, feed_icon')
+            ->group_by('feed_domain')
+            ->get_where('feeds', array('feed_status' => 'active'))
+            ->result();
+    }
+
+    /**
+     * Add a feed
+     *
+     * @param array $feed
+     * @return array
+     */
+    public function add_feed($feed)
     {
         $this->db->insert('feeds', $feed);
+
+        $feed['feed_id'] = $this->db->insert_id();
+
+        return $feed;
     }
 
-    function delete_feed($feed_id)
+    /**
+     * Delete a feed
+     *
+     * @param int $feed_id
+     * @return void
+     */
+    public function delete_feed($feed_id)
     {
         $this->db->update('feeds', array('feed_status' => 'deleted'), array('feed_id' => $feed_id));
     }
 
+    /**
+     * Get the number of items for a given feed
+     *
+     * @param int $feed_id
+     * @return int
+     */
+    public function get_item_count($feed_id) {
+        return $this->db
+            ->get_where('items', array('item_status !=' => 'deleted', 'item_feed_id' => $feed_id))
+            ->num_rows();
+    }
 }
 
 /* End of file feed_model.php */
