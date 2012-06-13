@@ -13,11 +13,11 @@
 
     <?php if ($items):?>
         <?php $this->load->view('admin/_activity_list')?>
+
+        <p id="pagination"><?php echo $pages?></p>
     <?php else: ?>
         <div class="error">You have no items :/</div>
     <?php endif; ?>
-
-    <p id="pagination"><?php echo $pages?></p>
 </div>
 
 <div id="side_content">
