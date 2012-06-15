@@ -66,4 +66,4 @@
     <p class="tip"><strong>Shorthand</strong><br />The blog post content area supports the <a href="http://daringfireball.net/projects/markdown/syntax" rel="external">Markdown</a> method of shorthand markup.</p>
 </div>
 
-<script type="text/javascript" src="/system/application/views/admin/wmd/wmd.js"></script>
+<script type="text/javascript" src="/application/views/admin/wmd/wmd.js"></script>
