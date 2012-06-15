@@ -58,7 +58,7 @@ class Feed_model extends CI_Model {
         if ($include_count) {
             return $this->db->select('feeds.*, count(*) AS item_count')
                 ->from('feeds')
-                ->join('items', 'items.item_feed_id = feeds.feed_id')
+                ->join('items', 'items.item_feed_id = feeds.feed_id AND items.item_status != "deleted"', 'left')
                 ->group_by('feeds.feed_id')
                 ->get()
                 ->result();
@@ -88,8 +88,8 @@ class Feed_model extends CI_Model {
         if ($include_count) {
             return $this->db->select('feeds.*, count(*) AS item_count')
                 ->from('feeds')
-                ->join('items', 'items.item_feed_id = feeds.feed_id')
-                ->where(array('feeds.feed_status' => 'active', 'items.item_status !=' => 'deleted'))
+                ->join('items', 'items.item_feed_id = feeds.feed_id AND items.item_status != "deleted"', 'left')
+                ->where(array('feeds.feed_status' => 'active'))
                 ->group_by('feeds.feed_id')
                 ->get()
                 ->result();
