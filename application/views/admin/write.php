@@ -12,13 +12,16 @@
         </p>
 
         <p>
-            <label class="title" for="content_input">Content</label>
-            <textarea id="content_input" class="text_input" name="content"><?php if (!$_POST && isset($item)): echo $item->item_content; else: echo $this->input->post('content'); endif;?></textarea>
+            <label class="title" for="wmd_input">Content</label>
+            <div class="wmd-panel">
+                <div id="wmd-button-bar"></div>
+                <textarea id="wmd-input" class="wmd-input text_input" name="content"><?php if (!$_POST && isset($item)): echo $item->item_content; else: echo $this->input->post('content'); endif;?></textarea>
+            </div>
         </p>
 
         <p>
             <label class="title" for="wmd-preview">Preview</label>
-            <div class="wmd-preview" id="wmd-preview" name="wmd-preview"></div>
+            <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
         </p>
 
         <p>
@@ -66,4 +69,13 @@
     <p class="tip"><strong>Shorthand</strong><br />The blog post content area supports the <a href="http://daringfireball.net/projects/markdown/syntax" rel="external">Markdown</a> method of shorthand markup.</p>
 </div>
 
-<script type="text/javascript" src="/application/views/admin/wmd/wmd.js"></script>
+<script type="text/javascript" src="/public/scripts/pagedown/Markdown.Converter.js"></script>
+<script type="text/javascript" src="/public/scripts/pagedown/Markdown.Sanitizer.js"></script>
+<script type="text/javascript" src="/public/scripts/pagedown/Markdown.Editor.js"></script>
+<script type="text/javascript">
+    (function () {
+        var converter1 = Markdown.getSanitizingConverter();
+        var editor1 = new Markdown.Editor(converter1);
+        editor1.run();
+    })();
+</script>
