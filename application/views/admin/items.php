@@ -14,7 +14,7 @@
     <?php if ($items):?>
         <?php $this->load->view('admin/_activity_list')?>
 
-        <p id="pagination"><?php echo $pages?></p>
+        <div id="pagination" class="row"><?php echo $pages?></div>
     <?php else: ?>
         <div class="error">You have no items :/</div>
     <?php endif; ?>

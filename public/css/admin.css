@@ -210,11 +210,19 @@ body {
     border-style: none none solid none;
 }
 
+#breadcrumb {
+    margin-bottom: 20px;
+}
+
 #main_content {
 	padding: 20px 20px 0 20px;
 	width: 588px;
 	position: relative;
 	float: left;
+}
+
+.row {
+    margin-bottom: 20px;
 }
 
 #side_content {
@@ -255,7 +263,7 @@ label.title {
 .text_input, .item_search input {
 	border: 1px solid #999;
 	background: #fefee2;
-	width: 570px;
+	width: 575px;
 	display: block;
 	padding: 5px;
 }
@@ -281,6 +289,7 @@ textarea.text_input {
 form.generic {
 	padding-bottom: 20px;
 	float: left;
+    width: 588px;
 }
 
 .icon {
@@ -611,9 +620,10 @@ button.positive, .buttons a.positive{
 
 .wmd-preview {
     border: 1px solid #999;
-    width: 570px;
+    width: 575px;
     display: block;
     padding: 5px;
+    min-height: 15px;
 }
 
 .wmd-button-row {
