@@ -23,9 +23,9 @@
         <?php if ($item->has_video()): ?>
             <div>
                 <?php
-                    $video = str_replace('width="212"', 'width="500"', $item->get_video());
-                    $video = str_replace('height="159"', 'height="375"', $video);
-                    $video = str_replace('height="178"', 'height="415"', $video);
+                    $video = str_replace('width="212"', 'width="640"', $item->get_video());
+                    $video = str_replace('height="159"', 'height="360"', $video);
+                    $video = str_replace('height="178"', 'height="360"', $video);
                     echo $video;
                 ?>
             </div>
