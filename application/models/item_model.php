@@ -66,10 +66,9 @@ class Item_model extends CI_Model {
                 $new_item->ID = $items[$key]->ID;
                 $new_item->item_date = $items[$key]->item_date;
 
-                // Autolinks
-                $new_item->item_content = $this->_autolink($items[$key]->item_content);
+                // Convert Markdown
+                $new_item->item_content = markdown($items[$key]->item_content);
 
-                $new_item->item_content = markdown($new_item->item_content);
                 $new_item->item_title = $this->_autolink($items[$key]->item_title);
                 $new_item->item_original_permalink = $items[$key]->item_permalink;
                 $new_item->item_permalink = $this->config->item('base_url').'items/view/'.$new_item->ID;
