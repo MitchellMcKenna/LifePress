@@ -60,7 +60,7 @@ class Items extends MY_Controller {
     function search($query = NULL)
     {
         if ($query) {
-            $this->lifepress->get_items_page('search', $this->uri->segment(5,1), TRUE, $query);
+            $this->lifepress->get_items_page('search', $this->uri->segment(5,1), TRUE, urldecode($query));
         } else {
             header('Location: '.$this->config->item('base_url'));
         }
