@@ -33,9 +33,9 @@
 
             <div class="clear"></div>
 
-            <button type="submit" class="positive"><img src="<?php echo $this->config->item('base_url')?>public/images/system/icons/silk/accept.png" alt="" />Publish Post Now</button>
+            <button type="submit" class="positive"><img src="<?php echo base_url("public/images/system/icons/silk/accept.png"); ?>" alt="" />Publish Post Now</button>
 
-            <a href="#draft" class="draft_button"><img src="<?php echo $this->config->item('base_url')?>public/images/system/icons/silk/page_white.png" alt="" />Save as Draft</a>
+            <a href="#draft" class="draft_button"><img src="<?php echo base_url("public/images/system/icons/silk/page_white.png"); ?>" alt="" />Save as Draft</a>
         </div>
 
     </form>
@@ -46,9 +46,9 @@
     <p class="tip"><strong>Shorthand</strong><br />The blog post content area supports the <a href="http://daringfireball.net/projects/markdown/syntax" rel="external">Markdown</a> method of shorthand markup.</p>
 </div>
 
-<script type="text/javascript" src="<?php echo $this->config->item('base_url')?>public/scripts/pagedown/Markdown.Converter.js"></script>
-<script type="text/javascript" src="<?php echo $this->config->item('base_url')?>public/scripts/pagedown/Markdown.Sanitizer.js"></script>
-<script type="text/javascript" src="<?php echo $this->config->item('base_url')?>public/scripts/pagedown/Markdown.Editor.js"></script>
+<script type="text/javascript" src="<?php echo base_url("public/scripts/pagedown/Markdown.Converter.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("public/scripts/pagedown/Markdown.Sanitizer.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url("public/scripts/pagedown/Markdown.Editor.js"); ?>"></script>
 <script type="text/javascript">
     (function () {
         var converter1 = Markdown.getSanitizingConverter(),

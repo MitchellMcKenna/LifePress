@@ -3,10 +3,10 @@
         <li id="item_<?php echo $item->ID?>" class="item <?php echo $item->item_status?>">
             <ul class="item_tools">
                 <li class="expand"><a href="#expand">Expand</a></li>
-                <li><a href="<?php echo $this->config->item('base_url')?>admin/write/edit/<?php echo $item->ID?>">Edit</a></li>
+                <li><a href="<?php echo site_url("admin/edit/" . $item->ID); ?>">Edit</a></li>
                 <li class="unpublish_this"><a href="#unpublish">Unpublish</a></li>
                 <li class="publish_this"><a href="#publish">Publish</a></li>
-                <li class="item_delete"><a class="confirm_first" href="<?php echo $this->config->item('base_url')?>admin/items/delete/<?php echo $item->ID?>">x</a></li>
+                <li class="item_delete"><a class="confirm_first" href="<?php echo site_url("admin/items/delete/" . $item->ID); ?>">x</a></li>
             </ul>
 
             <p class="icon" style="background-image: url(<?php echo $item->get_feed_icon()?>)"><?php echo $item->get_feed_domain()?> &#8212; <?php echo $item->get_human_date()?></p>
@@ -40,7 +40,7 @@
                     <ul class="tags">
                         <li class="title">Tags:</li>
                         <?php foreach ($item->get_tags() as $tag): ?>
-                            <li><a href="<?php echo $this->config->item('base_url')?>admin/items/tag/<?php echo $tag->slug?>"><?php echo $tag->name?></a></li>
+                            <li><a href="<?php echo site_url("admin/items/tag/" . $tag->slug); ?>"><?php echo $tag->name?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
