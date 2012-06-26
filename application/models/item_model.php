@@ -175,12 +175,15 @@ class Item_model extends CI_Model {
             $where = 'item_status != "deleted"';
         }
 
+        // Add query wild cards and replace spaces (+ sign) with wildcards
+        $query = '%' . str_replace(' ', '%', $query) . '%';
+        $query = $this->db->escape($query);
+
         return $this->db
             ->select('*')
             ->where($where)
-            ->like('item_title', $this->db->escape_like_str($query))
-            ->or_like('item_content', $this->db->escape_like_str($query))
-            ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left outer')
+            ->where("(items.item_title LIKE " . $query . " OR items.item_content LIKE " . $query . ")")
+            ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left')
             ->order_by('item_date', 'desc')
             ->get('items')
             ->num_rows();
@@ -194,12 +197,15 @@ class Item_model extends CI_Model {
             $where = 'item_status != "deleted"';
         }
 
+        // Add query wild cards and replace spaces with wildcards
+        $query = '%' . str_replace(' ', '%', $query) . '%';
+        $query = $this->db->escape($query);
+
         $items = $this->db
             ->select('*')
             ->where($where)
-            ->like('item_title', $this->db->escape_like_str($query))
-            ->or_like('item_content', $this->db->escape_like_str($query))
-            ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left outer')
+            ->where("(items.item_title LIKE " . $query . " OR items.item_content LIKE " . $query . ")")
+            ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left')
             ->order_by('item_date', 'desc')
             ->limit($limit)
             ->offset($offset)
