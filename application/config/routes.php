@@ -71,7 +71,7 @@ $route['page/:num'] = "home";
 $route['admin'] = "admin/dashboard";
 $route['admin/items/page/:num'] = 'admin/items';
 $route['admin/write/page'] = 'admin/write/index';
-$route['admin/write/edit/:num'] = 'admin/write/index';
+$route['admin/edit/(:num)'] = 'admin/write/edit/$1';
 $route['p/:any'] = "p";
 
 /* End of file routes.php */

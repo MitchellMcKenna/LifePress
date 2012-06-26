@@ -42,110 +42,139 @@
 
 class Write extends MY_Auth_Controller {
 
+    /**
+     * Builds the form validation constructors for editing and creating new
+     * item_models.
+     */
     function __construct()
     {
         parent::__construct();
 
         $this->load->library('form_validation');
+        $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('content', 'Content', 'trim');
+        $this->form_validation->set_rules('tags', 'Tags', 'trim|xss_clean');
+        $this->form_validation->set_rules('timestamp', 'Date', 'trim|xss_clean');
+
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
     }
 
-    function index()
-    {
-        if ($this->uri->segment(3) == 'edit') {
-            if ($this->input->post('referer')) {
-                $data->referer = $this->input->post('referer');
-            } else {
-                $data->referer = $_SERVER['HTTP_REFERER'];
+    /**
+     * Edit an existing item
+     *
+     * @param int $item_id Primary key of item_model
+     *
+     * @return void
+     */
+    public function edit($item_id) {
+        $item = $this->item_model->get_edit_item_by_id($item_id);
+
+        $data = new stdClass();
+        $data->page_name = 'Edit';
+        $data->referer = $this->getReferer();
+        $data->editing = TRUE;
+        $data->tag_string = '';
+
+        if (!empty($item->item_tags)) {
+            $tags = array();
+
+            foreach ($item->item_tags as $tag) {
+                $tags[] = $tag->name;
             }
 
-            $data->editing = TRUE;
-
-            // Get item
-            $data->item = $this->item_model->get_edit_item_by_id($this->uri->segment(4));
-
-            if (isset($data->item->item_tags[0])) {
-                foreach ($data->item->item_tags as $tag) {
-                    $tags[] = $tag->name;
-                }
-                $data->tag_string = implode(', ', $tags);
-            }
-
-            $new_post->item_data = $data->item->item_data;
+            $data->tag_string = implode(', ', $tags);
         }
 
+        if ($this->form_validation->run()) {
+            $new_post = $this->createItemFromPost();
+            if ($this->input->post('timestamp') == 'make_current') {
+                $new_post->item_date = time();
+            } elseif ($this->input->post('timestamp') == 'make_current_publish') {
+                $new_post->item_status = 'publish';
+                $new_post->item_date = time();
+            }
+
+            $this->item_model->update_item($new_post, $item);
+
+            header('Location: '.$this->input->post('referer'));
+        }
+
+
+        $data->item = $item;
+        $this->load->view('admin/_header', $data);
+        $this->load->view('admin/edit', $data);
+        $this->load->view('admin/_footer');
+    }
+
+    /**
+     * Create a new item_model
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $data = new stdClass();
         $data->page_name = 'Write';
 
-        if ($_POST) {
-            $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');
-            $this->form_validation->set_rules('date', 'Date', 'trim|xss_clean');
-            $this->form_validation->set_rules('content', 'Content', 'trim');
-            $this->form_validation->set_rules('tags', 'Tags', 'trim|xss_clean');
+        if ($this->form_validation->run()) {
+            // Prepare data
+            $new_post = $this->createItemFromPost();
+            $new_post->item_date = time();
+            
 
-            $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
-
-            if ($this->form_validation->run() == FALSE) {
-                $this->load->view('admin/_header', $data);
-                $this->load->view('admin/write', $data);
-            } else {
-                // Prepare data
-                if (!isset($data->editing)) {
-                    $new_post->item_data = array();
-                }
-
-                if ($this->input->post('tags', TRUE)) {
-                    $tags = explode(',', $this->input->post('tags', TRUE));
-
-                    foreach ($tags as $key => $value) {
-                        $tags[$key] = trim($value);
-                    }
-
-                    if (!empty($tags)) {
-                        $new_post->item_data['tags'] = $tags;
-                    }
-                } else {
-                    $new_post->item_data['tags'] = array();
-                }
-
-                $new_post->item_title = $this->input->post('title', TRUE);
-
-                if (!$this->input->post('content')) {
-                    $new_post->item_content = '';
-                } else {
-                    $new_post->item_content = $this->input->post('content');
-                }
-
-                if ($this->input->post('save_edit') == 'true') {
-                    // Save edits
-                    if ($this->input->post('timestamp') == 'make_current') {
-                        $new_post->item_date = time();
-                    } elseif ($this->input->post('timestamp') == 'make_current_publish') {
-                        $new_post->item_status = 'publish';
-                        $new_post->item_date = time();
-                    }
-
-                    $this->item_model->update_item($new_post, $data->item);
-
-                    header('Location: '.$this->input->post('referer'));
-                } else {
-                    // Add new item
-                    $new_post->item_name = url_title($this->input->post('title', TRUE));
-                    $new_post->item_date = time();
-
-                    if ($this->input->post('draft') == 'true') {
-                        $new_post->item_status = 'draft';
-                    }
-
-                    $this->item_model->add_blog_post($new_post);
-
-                    header('Location: '.$this->config->item('base_url').'admin/items');
-                }
+            if ($this->input->post('draft')) {
+                $new_post->item_status = 'draft';
             }
-        } else {
-            $this->load->view('admin/_header', $data);
-            $this->load->view('admin/write', $data);
+
+            $this->item_model->add_blog_post($new_post);
+            redirect('admin/items', 'location');
         }
 
+        $this->load->view('admin/_header', $data);
+        $this->load->view('admin/write', $data);
         $this->load->view('admin/_footer');
+    }
+
+    /**
+     * Retrieve the HTTP_REFERER for the form. This
+     *
+     * @return [type] [description]
+     */
+    private function getReferer() {
+        if ($this->input->post('referer')) {
+            return $this->input->post('referer');
+        } else if (isset($_SERVER['HTTP_REFERER'])) {
+            return $_SERVER['HTTP_REFERER'];
+        }
+    }
+
+    /**
+     * Creates a stdClass Object with data from the $_POST input. The title is
+     * sluggified and the tags are stored as an array.
+     * 
+     * @return stdClass A new "item" record with values taken from $_POST input
+     */
+    private function createItemFromPost() {
+        $new_post = new stdClass();
+        $new_post->item_title = $this->input->post('title', TRUE);
+        $new_post->item_content = $this->input->post('content');
+        $new_post->item_name = url_title($this->input->post('title', TRUE), '-', TRUE);
+        $new_post->item_data = array(
+            'tags' => array()
+        );
+
+        if ($this->input->post('tags', TRUE)) {
+            $tags = explode(',', $this->input->post('tags', TRUE));
+            $tags = array_filter($tags);
+            foreach ($tags as $key => $value) {
+                $tags[$key] = trim($value);
+            }
+
+            $new_post->item_data['tags'] = $tags;
+        }
+
+
+        return $new_post;
     }
 }
 
