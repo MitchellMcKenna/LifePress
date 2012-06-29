@@ -54,7 +54,7 @@ class Items extends MY_Controller {
 
     function index()
     {
-        header('Location: '.$this->config->item('base_url'));
+        redirect('/', 'refresh');
     }
 
     function search($query = NULL)
@@ -62,7 +62,7 @@ class Items extends MY_Controller {
         if ($query) {
             $this->lifepress->get_items_page('search', $this->uri->segment(5,1), TRUE, urldecode($query));
         } else {
-            header('Location: '.$this->config->item('base_url'));
+            redirect('/', 'refresh');
         }
     }
 
@@ -71,7 +71,7 @@ class Items extends MY_Controller {
         if ($tag) {
             $this->lifepress->get_items_page('tag', $this->uri->segment(5,1), TRUE, $tag);
         } else {
-            header('Location: '.$this->config->item('base_url'));
+            redirect('/', 'refresh');
         }
     }
 
@@ -80,7 +80,7 @@ class Items extends MY_Controller {
         if ($feed_domain) {
             $this->lifepress->get_items_page('site', $this->uri->segment(5,1), TRUE, $feed_domain);
         } else {
-            header('Location: '.$this->config->item('base_url'));
+            redirect('/', 'refresh');
         }
     }
 
@@ -89,7 +89,7 @@ class Items extends MY_Controller {
         if ($item_id) {
             $this->lifepress->get_single_item_page($item_id);
         } else {
-            header('Location: '.$this->config->item('base_url'));
+            redirect('/', 'refresh');
         }
     }
 
