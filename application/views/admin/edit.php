@@ -11,6 +11,12 @@
         </div>
 
         <div class="row">
+            <label for="title_input">Slug</label>
+            <?php echo site_url('items/view/' . $item->ID); ?>/
+            <input id="title_input" type="text" name="name" value="<?php echo set_value('name', $item->item_name); ?>" />
+        </div>
+
+        <div class="row">
             <label class="title" for="content_input">Content</label>
             <div class="wmd-panel">
                 <div id="wmd-button-bar"></div>

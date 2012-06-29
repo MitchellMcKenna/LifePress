@@ -9,6 +9,11 @@
         </div>
 
         <div class="row">
+            <label class="title" for="title_input">Slug</label>
+            <input id="title_input" type="text" class="text_input" name="title" value="<?php echo set_value('title'); ?>" />
+        </div>
+
+        <div class="row">
             <label class="title" for="wmd_input">Content</label>
             <div class="wmd-panel">
                 <div id="wmd-button-bar"></div>

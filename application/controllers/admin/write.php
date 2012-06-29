@@ -55,6 +55,7 @@ class Write extends MY_Auth_Controller {
         $this->form_validation->set_rules('content', 'Content', 'trim');
         $this->form_validation->set_rules('tags', 'Tags', 'trim|xss_clean');
         $this->form_validation->set_rules('timestamp', 'Date', 'trim|xss_clean');
+        $this->form_validation->set_rules('name', 'Slug', 'trim|required|alpha_dash');
 
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
     }
@@ -66,7 +67,8 @@ class Write extends MY_Auth_Controller {
      *
      * @return void
      */
-    public function edit($item_id) {
+    public function edit($item_id)
+    {
         $item = $this->item_model->get_edit_item_by_id($item_id);
 
         $data = new stdClass();
@@ -154,7 +156,8 @@ class Write extends MY_Auth_Controller {
      * 
      * @return stdClass A new "item" record with values taken from $_POST input
      */
-    private function createItemFromPost() {
+    private function createItemFromPost()
+    {
         $new_post = new stdClass();
         $new_post->item_title = $this->input->post('title', TRUE);
         $new_post->item_content = $this->input->post('content');
