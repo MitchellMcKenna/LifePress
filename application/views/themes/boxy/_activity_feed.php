@@ -26,26 +26,26 @@
                         <!-- domain-specific boxes -->
 
                         <?php if ($item->get_feed_domain() == 'twitter.com'): ?>
-                            <p class="twitter_user"><a href="<?php echo $this->config->item('base_url')?>items/site/<?php echo $item->get_feed_domain()?>"><img src="<?php echo $this->config->item('theme_folder')?>images/me_twitter.jpg" alt="" /></a></p>
+                            <p class="twitter_user"><a href="<?php echo base_url(array('items', 'site', $item->get_feed_domain()));?>"><img src="<?php echo $this->config->item('theme_folder')?>images/me_twitter.jpg" alt="" /></a></p>
                             <p class="twitter_tweet"><?php echo $item->get_title()?></p>
                         <?php elseif ($item->get_feed_domain() == 'vimeo.com'): ?>
                             <?php echo $item->get_video()?>
-                            <p class="vimeo_title"><a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>"><?php echo $item->get_title()?></a></p>
+                            <p class="vimeo_title"><a href="<?php echo $item->get_permalink()?>"><?php echo $item->get_title()?></a></p>
                         <?php elseif ($item->get_feed_domain() == 'youtube.com'): ?>
                             <?php echo $item->get_video()?>
-                            <p class="youtube_title"><a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>"><?php echo $item->get_title()?></a></p>
+                            <p class="youtube_title"><a href="<?php echo $item->get_permalink()?>"><?php echo $item->get_title()?></a></p>
                             <p><?php echo word_limiter(strip_tags($item->get_content()), 8)?></p>
                         <?php elseif ($item->get_feed_domain() == 'digg.com'): ?>
                             <div class="inner_container">
-                                <p class="digg_title"><a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>"><?php echo $item->get_title()?></a></p>
+                                <p class="digg_title"><a href="<?php echo $item->get_permalink()?>"><?php echo $item->get_title()?></a></p>
                                 <p><?php echo word_limiter(strip_tags($item->get_content()), 38)?></p>
                             </div>
                         <?php elseif ($item->get_feed_domain() == 'flickr.com'): ?>
-                            <p class="activity_image_text"><a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>"><?php echo $item->get_title()?></a><span class="activity_image_content"></span></p>
-                            <a class="activity_image" href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>" style="background: url(<?php echo $item->item_data[$item->get_feed_class()]['image']['m']?>) center center no-repeat"></a>
+                            <p class="activity_image_text"><a href="<?php echo $item->get_permalink()?>"><?php echo $item->get_title()?></a><span class="activity_image_content"></span></p>
+                            <a class="activity_image" href="<?php echo $item->get_permalink()?>" style="background: url(<?php echo $item->item_data[$item->get_feed_class()]['image']['m']?>) center center no-repeat"></a>
                         <?php elseif (!$item->feed_id): //this means it came from LifePress itself ?>
                             <div class="inner_container">
-                                <p class="blog_title"><a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>"><?php echo $item->get_title()?></a></p>
+                                <p class="blog_title"><a href="<?php echo $item->get_permalink()?>;?>"><?php echo $item->get_title()?></a></p>
                                 <p class="blog_cite">A blog post</p>
                             </div>
                         <?php else: //generic container with instructions ?>
@@ -57,7 +57,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <p class="date"><?php echo $item->get_human_date()?> | <a href="<?php echo $item->get_permalink()?>/<?php echo $item->get_name()?>">Comments &raquo;</a></p>
+                    <p class="date"><?php echo $item->get_human_date()?> | <a href="<?php echo $item->get_permalink()?>">Comments &raquo;</a></p>
                 </li>
 
             <?php endfor; ?>
