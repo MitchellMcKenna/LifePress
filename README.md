@@ -9,11 +9,12 @@ LifePress has been rewritten to work on CodeIgniter 2.1. Sweetcron was written o
 ## Installation
 
 1. In application/config/ rename config-sample.php to config.php
-2. Open config.php in a text editor and replace http://www.your-site.com/ with your full site url, including trailing slash.
-3. Create a new database on your server.
-4. In application/config/ rename database-sample.php to database.php
-5. Open database.php in a text editor and fill in the username, password and database name.
-6. That's it! Now if you go to your website you should see instructions for installation.
+2. In config.php replace http://www.your-site.com/ with your full site url, including trailing slash.
+3. In config.php set a [encryption key](http://codeigniter.com/user_guide/libraries/encryption.html) using a random 32 characters string.
+4. Create a new database on your server.
+5. In application/config/ rename database-sample.php to database.php
+6. Open database.php in a text editor and fill in the username, password and database name.
+7. That's it! Now if you go to your website you should see instructions for installation.
 
 ### Installing In A Subdirectory
 
@@ -37,6 +38,7 @@ LifePress can import items from your feeds either through Pseudo Cron (default) 
 3. Save your themes folder to a separate location.
 4. Overwrite your LifePress install with the new LifePress files you downloaded.
 5. Copy your .htaccess, config.php and database.php and themes files back in.
+6. Quickly check in case there have been any changes to the above 3 files since last upgrade.
 
 ## Contribute/Issues
 
