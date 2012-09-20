@@ -52,7 +52,6 @@ class MY_Controller extends CI_Controller {
         $this->load->file('application/libraries/markdown.php');
         $this->load->helper('text');
         $this->load->helper('url');
-        $this->load->library('simplepie');
         $this->load->library('page');
         $this->load->model('feed_model');
         $this->load->model('item_model');
@@ -60,6 +59,8 @@ class MY_Controller extends CI_Controller {
         $this->load->model('option_model');
         $this->load->helper('date');
         $this->load->library('auth');
+
+        $this->load->spark('ci-simplepie/1.0.0/');
 
         // Update last access
         $option['option_name'] = 'last_access';
@@ -71,6 +72,8 @@ class MY_Controller extends CI_Controller {
 
         // Initiate pseudo-cron
         $this->lifepress->pseudo_cron();
+
+        $this->data = new stdClass();
         $this->data->user = $this->auth->get_user($this->session->userdata('user_id'));
     }
 

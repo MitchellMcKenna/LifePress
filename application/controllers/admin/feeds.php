@@ -70,14 +70,14 @@ class Feeds extends MY_Auth_Controller {
 
         if ($this->form_validation->run()) {
             $feed = array(
-                'feed_title' => $this->simplepie->get_title(),
-                'feed_icon' => $this->simplepie->get_favicon(),
+                'feed_title' => $this->cisimplepie->get_title(),
+                'feed_icon' => $this->cisimplepie->get_favicon(),
                 'feed_url' => $this->input->post('url', TRUE),
                 'feed_status' => 'active'
             );
 
             // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
-            $url = parse_url($this->simplepie->get_permalink());
+            $url = parse_url($this->cisimplepie->get_permalink());
             if ( ! $url['host']) {
                 $url = parse_url($this->input->post('url', TRUE));
             }
@@ -118,12 +118,12 @@ class Feeds extends MY_Auth_Controller {
             return FALSE;
         }
 
-        $this->simplepie->set_feed_url($url);
-        $this->simplepie->enable_cache(FALSE);
-        $this->simplepie->init();
+        $this->cisimplepie->set_feed_url($url);
+        $this->cisimplepie->enable_cache(FALSE);
+        $this->cisimplepie->init();
 
-        if ($this->simplepie->error()) {
-            $this->form_validation->set_message('test_feed', $this->simplepie->error());
+        if ($this->cisimplepie->error()) {
+            $this->form_validation->set_message('test_feed', $this->cisimplepie->error());
             return FALSE;
         }
 

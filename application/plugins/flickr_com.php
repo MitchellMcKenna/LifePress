@@ -24,9 +24,9 @@ class Flickr_com {
         $item->item_content = trim(str_replace($remove_this, '', $item->item_content));
 
         // Some flickr feeds have different tag formatting
-        if (isset($item->item_data['categories'])) {
-            foreach ($item->item_data['categories'] as $key => $value) {
-                $item->item_data['tags'][$key] = $value->term;
+        if (isset($item->item_data->categories)) {
+            foreach ($item->item_data->categories as $key => $value) {
+                $item->item_data->tags[$key] = $value->term;
             }
         }
 

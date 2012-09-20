@@ -76,11 +76,11 @@ class Lifepress {
      * @return void
      */
     public function fetch_item($feed) {
-        $this->CI->simplepie->set_feed_url($feed['feed_url']);
-        $this->CI->simplepie->enable_cache(FALSE);
-        $this->CI->simplepie->init();
+        $this->CI->cisimplepie->set_feed_url($feed['feed_url']);
+        $this->CI->cisimplepie->enable_cache(FALSE);
+        $this->CI->cisimplepie->init();
 
-        $items = $this->CI->simplepie->get_items();
+        $items = $this->CI->cisimplepie->get_items();
 
         $this->add_new_items($items, $feed);
     }
@@ -88,14 +88,14 @@ class Lifepress {
     function add_new_items($items, $feed)
     {
         foreach ($items as $item) {
-            $new->item_data = array();
-            $new->item_data['title'] = $item->get_title();
-            $new->item_data['permalink'] = $item->get_permalink();
-            $new->item_data['content'] = $item->get_content();
-            $new->item_data['enclosures'] = $item->get_enclosures();
-            $new->item_data['categories'] = $item->get_categories();
-            $new->item_data['tags'] = $this->get_tags($new->item_data);
-            $new->item_data['image'] = $this->get_image($item->get_content());
+            $new->item_data = new stdClass();
+            $new->item_data->title = $item->get_title();
+            $new->item_data->permalink = $item->get_permalink();
+            $new->item_data->content = $item->get_content();
+            $new->item_data->enclosures = $item->get_enclosures();
+            $new->item_data->categories = $item->get_categories();
+            $new->item_data->tags = $this->get_tags($new->item_data);
+            $new->item_data->image = $this->get_image($item->get_content());
 
             // Build out clean item
             $new->item_status = 'publish';
@@ -152,14 +152,15 @@ class Lifepress {
         $tags = '';
         $other_tags = '';
         // Attempt to pull from enclosures
-        if (isset($data['enclosures'][0]->categories[0]->term)) {
-            $tags = html_entity_decode($data['enclosures'][0]->categories[0]->term);
+        if (isset($data->enclosures[0]->categories[0]->term)) {
+
+            $tags = html_entity_decode($data->enclosures[0]->categories[0]->term);
             $tags = explode(' ', $tags);
         }
 
         // Attempt to pull from categories
-        if (isset($data['categories'][0]->term)) {
-            foreach ($data['categories'] as $category) {
+        if (isset($data->categories[0]->term)) {
+            foreach ($data->categories as $category) {
                 // Sometimes a tag is an ugly url that I don't think we want...
                 if (substr($category->term, 0, 7) != 'http://') {
                     $other_tags[] = html_entity_decode($category->term);
@@ -283,6 +284,7 @@ class Lifepress {
             exit();
         }
 
+        $data = new stdClass();
         $data->blog_posts = $this->CI->item_model->get_items_by_feed_domain(0, 10, 'lifepress', $public);
         $data->active_feeds = $this->CI->feed_model->get_active_feed_domains();
         $data->popular_tags = $this->CI->tag_model->get_all_tags('count', 50);

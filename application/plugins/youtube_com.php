@@ -7,13 +7,13 @@ class Youtube_com {
     function pre_db($item, $original)
     {
         // If content is not automatically found, try to grab it from enclosure description
-        if (empty($item->item_content) && !empty($item->item_data['enclosures'][0]->description)) {
-		    $item->item_content	= $item->item_data['enclosures'][0]->description;
+        if (empty($item->item_content) && !empty($item->item_data->enclosures[0]->description)) {
+		    $item->item_content	= $item->item_data->enclosures[0]->description;
         }
 
         // If image is not automatically found, try to grab it from enclosure thumbnails
-        if (empty($item->item_data['image']) && !empty($item->item_data['enclosures'][0]->thumbnails[0])) {
-            $item->item_data['image'] = $item->item_data['enclosures'][0]->thumbnails[0];
+        if (empty($item->item_data->image) && !empty($item->item_data->enclosures[0]->thumbnails[0])) {
+            $item->item_data->image = $item->item_data->enclosures[0]->thumbnails[0];
         }
 
         return $item;
