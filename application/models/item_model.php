@@ -71,7 +71,7 @@ class Item_model extends CI_Model {
 
                 $new_item->item_title = $this->_autolink($items[$key]->item_title);
                 $new_item->item_original_permalink = $items[$key]->item_permalink;
-                $new_item->item_permalink = $this->config->item('base_url').'items/view/'.$new_item->ID;
+                $new_item->item_permalink = site_url(array('post', $new_item->ID, $items[$key]->item_name));
                 $new_item->item_status = $items[$key]->item_status;
                 $new_item->item_name = $items[$key]->item_name;
                 $new_item->item_data = unserialize($items[$key]->item_data);

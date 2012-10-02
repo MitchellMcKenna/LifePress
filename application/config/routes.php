@@ -67,6 +67,8 @@
 $route['default_controller'] = "home";
 $route['404_override'] = '';
 
+$route['post/(:num)/:any'] = 'items/post/$1';
+
 $route['page/:num'] = "home";
 $route['admin'] = "admin/dashboard";
 $route['admin/items/page/:num'] = 'admin/items';
