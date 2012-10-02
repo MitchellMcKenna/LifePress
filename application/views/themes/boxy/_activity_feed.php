@@ -45,7 +45,7 @@
                             <a class="activity_image" href="<?php echo $item->get_permalink()?>" style="background: url(<?php echo $item->item_data[$item->get_feed_class()]['image']['m']?>) center center no-repeat"></a>
                         <?php elseif (!$item->feed_id): //this means it came from LifePress itself ?>
                             <div class="inner_container">
-                                <p class="blog_title"><a href="<?php echo $item->get_permalink()?>;?>"><?php echo $item->get_title()?></a></p>
+                                <p class="blog_title"><a href="<?php echo $item->get_permalink()?>"><?php echo $item->get_title()?></a></p>
                                 <p class="blog_cite">A blog post</p>
                             </div>
                         <?php else: //generic container with instructions ?>
