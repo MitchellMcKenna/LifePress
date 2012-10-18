@@ -56,15 +56,13 @@ class Lifepress {
         }
 
         // Soz
-        $option['option_name'] = 'last_fetch';
-        $option['option_value'] = time();
-        $this->CI->option_model->add_option($option);
+        $this->CI->option_model->add_option(array(
+            'option_name' => 'last_fetch',
+            'option_value' => time()
+        ));
 
-        $feeds = $this->CI->feed_model->get_active_feeds();
-        if ($feeds) {
-            foreach ($feeds as $feed) {
-                $this->fetch_item((array)$feed);
-            }
+        foreach ($this->CI->feed_model->get_active_feeds() as $feed) {
+            $this->fetch_item($feed);
         }
     }
 
@@ -75,8 +73,8 @@ class Lifepress {
      *
      * @return void
      */
-    public function fetch_item($feed) {
-        $this->CI->simplepie->set_feed_url($feed['feed_url']);
+    public function fetch_item(Feed $feed) {
+        $this->CI->simplepie->set_feed_url($feed->url);
         $this->CI->simplepie->enable_cache(FALSE);
         $this->CI->simplepie->init();
 
@@ -85,30 +83,38 @@ class Lifepress {
         $this->add_new_items($items, $feed);
     }
 
-    function add_new_items($items, $feed)
+    /**
+     * [add_new_items description]
+     *
+     * @param [SimplePie] $items [description]
+     * @param Feed  $feed  [description]
+     */
+    function add_new_items(array $items, Feed $feed)
     {
-        foreach ($items as $item) {
-            $new->item_data = array();
-            $new->item_data['title'] = $item->get_title();
-            $new->item_data['permalink'] = $item->get_permalink();
-            $new->item_data['content'] = $item->get_content();
-            $new->item_data['enclosures'] = $item->get_enclosures();
-            $new->item_data['categories'] = $item->get_categories();
-            $new->item_data['tags'] = $this->get_tags($new->item_data);
-            $new->item_data['image'] = $this->get_image($item->get_content());
 
-            // Build out clean item
-            $new->item_status = 'publish';
-            $new->item_date = strtotime($item->get_date());
-            $new->item_title = $this->CI->security->xss_clean(trim(strip_tags($item->get_title())));
-            $new->item_permalink = $item->get_permalink();
-            $new->item_content = $this->CI->security->xss_clean(trim(strip_tags($item->get_content())));
-            $new->item_name = url_title($new->item_title);
-            $new->item_feed_id = $feed['feed_id'];
+        foreach ($items as $simple_pie) {
+            $item = new Item();
+            $item->data = array(
+                'title'      => $simple_pie->get_title(),
+                'permalink'  => $simple_pie->get_permalink(),
+                'content'    => $simple_pie->get_content(),
+                'enclosures' => $simple_pie->get_enclosures(),
+                'categories' => $simple_pie->get_categories(),
+                'image'      => $this->get_image($simple_pie->get_content()),
+            );
 
-            $new = $this->extend('pre_db', $feed['feed_domain'], $new, $item);
+            $item->data['tags'] = $this->get_tags($item->data);
 
-            $this->CI->item_model->add_item($new);
+            $item->status    = 'publish';
+            $item->date      = strtotime($simple_pie->get_date());
+            $item->content   = $this->CI->security->xss_clean(trim(strip_tags($item->data['content'])));
+            $item->title     = $this->CI->security->xss_clean(trim(strip_tags($item->data['title'])));
+            $item->permalink = $item->data['permalink'];
+            $item->name      = url_title($item->title);
+            $item->feed_id   = $feed->id;
+
+            $item = $this->extend('pre_db', $feed->domain, $item, $simple_pie);
+            $this->CI->item_model->add_item($item);
         }
     }
 
@@ -129,16 +135,16 @@ class Lifepress {
         // We can extend what LifePress does at various points in the import / output process by using plugin architecture
         // See application/plugins for example plugins
         if ($feed_domain && $item) {
-            $class = str_replace('.', '_', $feed_domain);
-            $plugin = APPPATH.'plugins/'.$class.'.php';
+            $class_name = str_replace('.', '_', $feed_domain);
+            $plugin_path = APPPATH.'plugins/'.$class_name.'.php';
 
-            if (file_exists($plugin)) {
+            if (file_exists($plugin_path)) {
                 // Check if already loaded
-                if (!method_exists($class, $method)) {
-                    include(APPPATH.'plugins/'.$class.'.php');
+                if (!method_exists($class_name, $method)) {
+                    include(APPPATH.'plugins/'.$class_name.'.php');
                 }
 
-                $plugin = new $class;
+                $plugin = new $class_name;
 
                 return $plugin->$method($item, $simplepie_object);
             } else {
@@ -250,11 +256,15 @@ class Lifepress {
     {
         if ($item_id) {
             // Remove query string (some 3rd party commenting services refer back after commenting)
-            $item_id = explode('?', $item_id);
-            $item_id = $item_id[0];
+            list($item_id) = explode('?', $item_id);
+            $data = new StdClass();
 
             $data->item = $this->CI->item_model->get_public_item_by_id($item_id);
-            $data->page_name = $data->item->get_title();
+            if (!$data->item) {
+                show_404();
+            }
+
+            $data->page_name = $data->item->title;
             $data->popular_tags = $this->CI->tag_model->get_all_tags('count', 50);
             $data->all_tags = $this->CI->tag_model->get_all_tags('count');
 
@@ -271,6 +281,8 @@ class Lifepress {
 
     function get_items_page($type = 'index', $current_page_num = 1, $public = FALSE, $query = NULL, $rss_filter = NULL, $query_items = NULL, $offset = NULL, $limit = NULL)
     {
+        $data = new StdClass();
+
         // Return raw items for query_items()
         if ($query_items) {
             if ($type == 'site') {
@@ -334,15 +346,19 @@ class Lifepress {
             if ($type == 'index') {
                 $data->page_name = 'Home';
 
-                $this->CI->page->SetItemCount($this->CI->item_model->count_all_items($public));
+                $this->CI->page->setItemCount($this->CI->item_model->count_all_items($public));
 
                 if ($public) {
-                    $this->CI->page->SetLinksHref($this->CI->config->item('base_url').$admin);
+                    $this->CI->page->setLinksHref($this->CI->config->item('base_url').$admin);
                 } else {
-                    $this->CI->page->SetLinksHref($this->CI->config->item('base_url').$admin.'items/');
+                    $this->CI->page->setLinksHref($this->CI->config->item('base_url').$admin.'items/');
                 }
 
-                $data->items = $this->CI->item_model->get_all_items($this->CI->page->GetOffset(), $this->CI->page->GetSqlLimit(), $public);
+                $data->items = $this->CI->item_model->get_all_items(
+                    $this->CI->page->getOffset(),
+                    $this->CI->page->getSqlLimit(),
+                    $public
+                );
             } elseif ($type == 'search') {
                 $data->page_name = 'Items Search';
 
@@ -383,7 +399,6 @@ class Lifepress {
             // Load view
             if ($public) {
                 $data->pages = $this->CI->page->GetPageLinks();
-
                 $this->CI->load->view('themes/'.$this->CI->config->item('theme').'/_header', $data);
                 $this->CI->load->view('themes/'.$this->CI->config->item('theme').'/items', $data);
                 $this->CI->load->view('themes/'.$this->CI->config->item('theme').'/_footer', $data);
