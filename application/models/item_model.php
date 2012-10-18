@@ -45,94 +45,52 @@ class Item_model extends CI_Model {
     function __construct()
     {
         parent::__construct();
+        $this->load->model("tag_model");
     }
 
-    function _process($items, $return_single = FALSE)
+    private function _process(array $items, $return_single = FALSE)
     {
+        $result_items = array();
+
         if ($items) {
-            foreach ($items as $key => $value) {
-                $new_item = new Lifepress_item();
-
-                // Item feed components
-                $new_item->feed_id = $items[$key]->feed_id;
-                $new_item->feed_title = $items[$key]->feed_title;
-                $new_item->feed_icon = $items[$key]->feed_icon;
-                $new_item->feed_url = $items[$key]->feed_url;
-                $new_item->feed_data = $items[$key]->feed_data;
-                $new_item->feed_status = $items[$key]->feed_status;
-                $new_item->feed_domain = $items[$key]->feed_domain;
-
-                // Standard item components
-                $new_item->ID = $items[$key]->ID;
-                $new_item->item_date = $items[$key]->item_date;
-
-                // Convert Markdown
-                $new_item->item_content = markdown($items[$key]->item_content);
-
-                $new_item->item_title = $this->_autolink($items[$key]->item_title);
-                $new_item->item_original_permalink = $items[$key]->item_permalink;
-                $new_item->item_permalink = $this->config->item('base_url').'items/view/'.$new_item->ID;
-                $new_item->item_status = $items[$key]->item_status;
-                $new_item->item_name = $items[$key]->item_name;
-                $new_item->item_data = unserialize($items[$key]->item_data);
-                $new_item->item_tags = $this->get_tags($items[$key]->ID);
-
-                // Make adjustments if blog post
-                if (!$items[$key]->feed_id) {
-                    $new_item->feed_icon = '/favicon.ico';
-                    $url = parse_url($this->config->item('base_url'));
-                    if (substr($url['host'], 0, 4) == 'www.') {
-                        $new_item->feed_domain = substr($url['host'], 4);
-                    } else {
-                        $new_item->feed_domain = $url['host'];
-                    }
-                }
-
-                $new_item->feed_class = str_replace('.','_',$new_item->feed_domain);
+            foreach ($items as $item_data) {
+                $item = new Item();
+                $item->hydrate((array)$item_data);
+                $item->set_tags($this->tag_model->get_items_tags($item));
 
                 // Extended item components
-                if ($new_item->feed_id) {
-                    $new_item = $this->lifepress->extend('pre_display', $new_item->feed_domain, $new_item);
+                if (!$item->is_blog_post()) {
+                    $this->lifepress->extend('pre_display', $item->feed->domain, $item);
                 }
 
-                // Custom item components
-                $new_item->nice_date = timespan($items[$key]->item_date);
-                if ($new_item->item_date < strtotime('1 day ago')) {
-                    $new_item->human_date = date('F j Y, g:ia', $items[$key]->item_date);
-                } else {
-                    $new_item->human_date = $new_item->nice_date.' ago';
-                }
-
-                $items[$key] = $new_item;
+                $result_items[] = $item;
             }
 
-            if ($return_single) {
-                return $items[0];
-            } else {
-                return $items;
-            }
-        } else {
-            return false;
+            return $return_single ? $result_items[0] : $result_items;
         }
+
+        return $result_items;
     }
 
-    function _autolink($text)
-    {
-        return preg_replace('/(?<!\S)((http(s?):\/\/)|(www\.))+([\w.\/&=?\-~%;]+)\b/i', '<a href="http$3://$4$5" rel="external">http$3://$4$5</a>', $text);
-    }
-
+    /**
+     * Looks up published item by ID
+     *
+     * @param integer $item_id Item id
+     *
+     * @return Item|False - false if no related item was found
+     */
     function get_public_item_by_id($item_id)
     {
-        $item = $this->db
+        $item = $this->_process($this->db
             ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left outer')
             ->get_where('items', array('ID' => $item_id, 'item_status' => 'publish'))
-            ->result();
+            ->result_array(), TRUE);
 
-        if ($item) {
-            return $this->_process($item, TRUE);
-        } else {
-            show_404();
+        if ($item->id == $item_id) {
+            return $item;
         }
+
+        return false;
     }
 
     function count_all_items($public = FALSE)
@@ -162,7 +120,7 @@ class Item_model extends CI_Model {
             ->join('feeds', 'feeds.feed_id = items.item_feed_id', 'left outer')
             ->order_by('item_date', 'DESC')
             ->get_where('items', $where)
-            ->result();
+            ->result_array();
 
         return $this->_process($items);
     }
@@ -313,20 +271,19 @@ class Item_model extends CI_Model {
         return $this->db
             ->join('tag_relationships', 'tags.tag_id = tag_relationships.tag_id')
             ->get_where('tags', array('item_id' => $item_id))
-            ->result();
+            ->result_array();
     }
 
-    function add_item($item = NULL)
+    function add_item(Item $item)
     {
         // We assume that if an item has the exact same timestamp and origin as one in the db, it's a dupe
         if (!$this->db
             ->join('feeds', 'feeds.feed_id = items.item_feed_id')
-            ->get_where('items', array('item_feed_id' => $item->item_feed_id, 'item_date' => $item->item_date))
+            ->get_where('items', array('item_feed_id' => $item->feed_id, 'item_date' => $item->date))
             ->row()
         ) {
-            $tags = $item->item_data['tags'];
-            $item->item_data = serialize($item->item_data);
-            $this->db->insert('items', $item);
+            $tags = $item->data['tags'];
+            $this->db->insert('items', $item->toArray());
             $this->tag_item($tags, $this->db->insert_id());
         }
     }
@@ -414,12 +371,14 @@ class Item_model extends CI_Model {
         $this->db->update('items', array('item_status' => 'deleted'), array('ID' => $item_id));
     }
 
-    function get_edit_item_by_id($item_id)
+    public function get_edit_item_by_id($item_id)
     {
-        $item = $this->db->get_where('items', array('ID' => $item_id))->row();
-        $item->item_tags = $this->get_tags($item->ID);
-        $item->item_data = unserialize($item->item_data);
-        return $item;
+        $item = $this->db->get_where('items', array('ID' => $item_id))->row_array();
+
+        $obj = new Item();
+        $obj->hydrate($item);
+
+        return $obj;
     }
 
     function update_item($item = NULL, $old = NULL)

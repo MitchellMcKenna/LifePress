@@ -47,20 +47,31 @@ class Tag_model extends CI_Model {
         parent::__construct();
     }
 
-    function _process($tags)
+    private function _process(array $tags)
     {
-        return $tags;
+        $tag_results = array();
+        foreach ($tags as $tag_data) {
+            $tag = new Tag;
+            $tag->hydrate($tag_data);
+            $tag_results[$tag->id] = $tag;
+        }
+
+        return $tag_results;
     }
 
     function get_all_tags($orderby = 'name', $limit = 10000)
     {
-        $tags = $this->_process($this->db->limit($limit)->order_by($orderby, 'desc')->get('tags')->result());
+        return $this->_process(
+            $this->db->limit($limit)->order_by($orderby, 'desc')->get('tags')->result_array()
+        );
 
-        if ($tags) {
-            return $tags;
-        } else {
-            return array();
-        }
+    }
+
+    public function get_items_tags(Item $item) {
+        return $this->_process($this->db
+            ->join('tag_relationships', 'tags.tag_id = tag_relationships.tag_id')
+            ->get_where('tags', array('item_id' => $item->id))
+            ->result_array());
     }
 }
 

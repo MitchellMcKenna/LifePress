@@ -47,6 +47,17 @@ class Feed_model extends CI_Model {
         parent::__construct();
     }
 
+    private function _process(array $data, array $extra_columns = array()) {
+        $feed_results = array();
+        foreach ($data as $feed_data) {
+            $feed = new Feed();
+            $feed->hydrate($feed_data, $extra_columns);
+            $feed_results[$feed->id] = $feed;
+        }
+
+        return $feed_results;
+    }
+
     /**
      * Get all feeds (active and inactive)
      *
@@ -56,15 +67,19 @@ class Feed_model extends CI_Model {
     public function get_feeds($include_count = false)
     {
         if ($include_count) {
-            return $this->db->select('feeds.*, count(*) AS item_count')
+            $feeds = $this->db->select('feeds.*, count(*) AS item_count')
                 ->from('feeds')
                 ->join('items', 'items.item_feed_id = feeds.feed_id AND items.item_status != "deleted"', 'left')
                 ->group_by('feeds.feed_id')
                 ->get()
                 ->result();
+            $included_columns = array('item_count');
         } else {
-            return $this->db->get('feeds')->result();
+            $feeds = $this->db->get('feeds')->result();
+            $included_columns = false;
         }
+
+        $this->_process($feeds, $included_columns);
     }
 
     /**
@@ -86,18 +101,22 @@ class Feed_model extends CI_Model {
     public function get_active_feeds($include_count = FALSE)
     {
         if ($include_count) {
-            return $this->db->select('feeds.*, count(*) AS item_count')
+            $extra_columns = array('item_count');
+            $feeds = $this->db->select('feeds.*, count(*) AS item_count')
                 ->from('feeds')
                 ->join('items', 'items.item_feed_id = feeds.feed_id AND items.item_status != "deleted"', 'left')
                 ->where(array('feeds.feed_status' => 'active'))
                 ->group_by('feeds.feed_id')
                 ->get()
-                ->result();
+                ->result_array();
         } else {
-            return $this->db
+            $extra_columns = array();
+            $feeds = $this->db
                 ->get_where('feeds', array('feed_status' => 'active'))
-                ->result();
+                ->result_array();
         }
+
+        return $this->_process($feeds, $extra_columns);
     }
 
     /**
@@ -115,16 +134,16 @@ class Feed_model extends CI_Model {
     }
 
     /**
-     * Add a feed
+     * Inserts a new Feed record into the database
      *
-     * @param array $feed
-     * @return array
+     * @param Feed $feed
+     *
+     * @return Feed
      */
-    public function add_feed($feed)
+    public function add_feed(Feed $feed)
     {
-        $this->db->insert('feeds', $feed);
-
-        $feed['feed_id'] = $this->db->insert_id();
+        $this->db->insert('feeds', $feed->toArray());
+        $feed->id = $this->db->insert_id();
 
         return $feed;
     }
