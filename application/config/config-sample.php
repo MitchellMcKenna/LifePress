@@ -204,7 +204,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 |	4 = All Messages
 |
 | You can also pass in a array with threshold levels to show individual error types
-| 
+|
 | 	array(2) = Debug Messages, without Error Messages
 |
 | For a live site you'll usually only enable Errors (1) to be logged otherwise
@@ -408,10 +408,17 @@ $config['proxy_ips'] = '';
 */
 function __autoload($class)
 {
- if(strpos($class, 'CI_') !== 0)
- {
-  @include_once( APPPATH . 'core/'. $class . EXT );
- }
+  if (strpos($class, 'CI_') !== 0) {
+    @include_once( APPPATH . 'core/'. $class . EXT );
+  }
+
+  switch (strtolower($class)) {
+    case 'feed':   include APPPATH . 'libraries/lifepress/feed'   . EXT; break;
+    case 'item':   include APPPATH . 'libraries/lifepress/item'   . EXT; break;
+    case 'option': include APPPATH . 'libraries/lifepress/option' . EXT; break;
+    case 'tag':    include APPPATH . 'libraries/lifepress/tag'    . EXT; break;
+    case 'user':   include APPPATH . 'libraries/lifepress/user'   . EXT; break;
+  }
 }
 
 /* End of file config.php */
