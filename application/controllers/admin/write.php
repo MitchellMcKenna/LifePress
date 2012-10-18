@@ -51,6 +51,7 @@ class Write extends MY_Auth_Controller {
 
     function index()
     {
+        $data = new StdClass();
         if ($this->uri->segment(3) == 'edit') {
             if ($this->input->post('referer')) {
                 $data->referer = $this->input->post('referer');
@@ -63,14 +64,12 @@ class Write extends MY_Auth_Controller {
             // Get item
             $data->item = $this->item_model->get_edit_item_by_id($this->uri->segment(4));
 
-            if (isset($data->item->item_tags[0])) {
-                foreach ($data->item->item_tags as $tag) {
-                    $tags[] = $tag->name;
-                }
-                $data->tag_string = implode(', ', $tags);
+            $tags = array();
+            foreach ($data->item->tags as $tag) {
+                $tags[] = $tag->name;
             }
 
-            $new_post->item_data = $data->item->item_data;
+            $data->tag_string = implode(', ', $tags);
         }
 
         $data->page_name = 'Write';

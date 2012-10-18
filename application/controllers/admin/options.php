@@ -45,20 +45,24 @@ class Options extends MY_Auth_Controller {
     function __construct()
     {
         parent::__construct();
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
     }
 
     function index()
     {
-        $this->load->library('form_validation');
-
         $this->load->helper('file');
         $this->load->helper('inflector');
+
+        $data = new StdClass();
+        $themes = array();
 
         $data->page_name = 'Options';
 
         $theme_folder = get_dir_file_info('application/views/themes', FALSE, TRUE);
 
         foreach ($theme_folder as $key => $value) {
+            $themes[$key] = new StdClass();
             $themes[$key]->folder = $key;
             $themes[$key]->name = humanize($key);
         }
@@ -71,7 +75,7 @@ class Options extends MY_Auth_Controller {
             $this->form_validation->set_rules('new_password_confirm', 'New Password Confirm', 'trim');
             $this->form_validation->set_rules('per page', 'Items Per Page', 'numeric');
 
-            $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+
 
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('admin/_header', $data);

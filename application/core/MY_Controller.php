@@ -71,6 +71,7 @@ class MY_Controller extends CI_Controller {
 
         // Initiate pseudo-cron
         $this->lifepress->pseudo_cron();
+        $this->data = new StdClass();
         $this->data->user = $this->auth->get_user($this->session->userdata('user_id'));
     }
 

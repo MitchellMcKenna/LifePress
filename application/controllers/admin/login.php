@@ -46,6 +46,7 @@ class Login extends MY_Controller {
         parent::__construct();
 
         $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
         if (!$this->data->user === FALSE) {
             header('Location: '.$this->config->item('base_url').'admin');
@@ -53,14 +54,13 @@ class Login extends MY_Controller {
     }
 
     function index() {
+        $data = new StdClass();
         $data->page_name = 'Login';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
-            $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
-            $rules['username']	= "required|trim";
-            $rules['password']	= "required|trim";
-            $this->form_validation->set_rules($rules);
+            $this->form_validation->set_rules('username', 'Username', 'required|trim');
+            $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('admin/login', $data);

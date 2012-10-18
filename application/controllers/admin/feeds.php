@@ -52,6 +52,7 @@ class Feeds extends MY_Auth_Controller {
 
     public function index()
     {
+        $data = new StdClass();
         $data->page_name = 'Feeds';
 
         $data->feeds = $this->feed_model->get_active_feeds(TRUE);
@@ -63,18 +64,20 @@ class Feeds extends MY_Auth_Controller {
 
     public function add()
     {
+        $data = new StdClass();
         $data->page_name = 'Add Feed';
 
         $this->form_validation->set_rules('url', 'Url', 'trim|prep_url|required|xss_clean|callback_test_feed');
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
         if ($this->form_validation->run()) {
-            $feed = array(
+            $feed = new Feed();
+            $feed->hydrate(array(
                 'feed_title' => $this->simplepie->get_title(),
                 'feed_icon' => $this->simplepie->get_favicon(),
                 'feed_url' => $this->input->post('url', TRUE),
                 'feed_status' => 'active'
-            );
+            ));
 
             // Use permalink because sometimes feed is on subdomain which screws up plugin compatibility
             $url = parse_url($this->simplepie->get_permalink());
@@ -82,13 +85,13 @@ class Feeds extends MY_Auth_Controller {
                 $url = parse_url($this->input->post('url', TRUE));
             }
             if (substr($url['host'], 0, 4) === 'www.') {
-                $feed['feed_domain'] = substr($url['host'], 4);
+                $feed->domain = substr($url['host'], 4);
             } else {
-                $feed['feed_domain'] = $url['host'];
+                $feed->domain = $url['host'];
             }
 
-            if (!$feed['feed_icon']) {
-                $feed['feed_icon'] = 'http://'.$feed['feed_domain'].'/favicon.ico';
+            if (!$feed->icon) {
+                $feed->icon = 'http://' . $feed->domain . '/favicon.ico';
             }
 
             // Add new feed to database
