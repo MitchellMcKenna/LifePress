@@ -7,8 +7,8 @@ class Search_twitter_com {
     function pre_db($item, $original)
     {
         $original_publisher = $original->get_author();
-        $item->item_data['publisher'] = $original_publisher->name;
-        $item->item_data['publisher_link'] = $original_publisher->link;
+        $item->data['publisher'] = $original_publisher->name;
+        $item->data['publisher_link'] = $original_publisher->link;
 
         return $item;
     }

@@ -11,16 +11,16 @@ class Friendfeed_com {
 
     function pre_display($item)
     {
-        $big_pic = $item->item_data['enclosures'][0]->link;
+        $big_pic = $item->data['enclosures'][0]->link;
         // Check if is image
         $format = substr($big_pic, -4);
         if ($format == '.jpg' || $format == '.gif' || $format == '.png') {
-            $item->item_data['image'] = $big_pic;
+            $item->data['image'] = $big_pic;
         }
 
         // Remove small icons as image
-        if (substr($item->item_data['image'], 0, 42) == 'http://friendfeed.com/static/images/icons/') {
-            $item->item_data['image'] = '';	
+        if (substr($item->data['image'], 0, 42) == 'http://friendfeed.com/static/images/icons/') {
+            $item->data['image'] = '';
         }
 
         return $item;

@@ -1,6 +1,6 @@
 <div id="main_content">
     <?php if (isset($editing)): ?>
-        <div id="breadcrumb"><a href="<?php echo $referer?>">Back to Items</a> &rsaquo; Editing <span class="highlight"><?php echo $item->item_title?></span></div>
+        <div id="breadcrumb"><a href="<?php echo $referer?>">Back to Items</a> &rsaquo; Editing <span class="highlight"><?php echo $item->title?></span></div>
     <?php endif; ?>
 
     <?php echo validation_errors();?>
@@ -8,14 +8,14 @@
     <form action="" method="post" class="generic">
         <div class="row">
             <label class="title" for="title_input">Title</label>
-            <input id="title_input" type="text" class="text_input" name="title" value="<?php if (!$_POST && isset($item)): echo $item->item_title; else: echo $this->input->post('title'); endif;?>" />
+            <input id="title_input" type="text" class="text_input" name="title" value="<?php if (!$_POST && isset($item)): echo $item->title; else: echo $this->input->post('title'); endif;?>" />
         </div>
 
         <div class="row">
             <label class="title" for="wmd_input">Content</label>
             <div class="wmd-panel">
                 <div id="wmd-button-bar"></div>
-                <textarea id="wmd-input" class="wmd-input text_input" name="content"><?php if (!$_POST && isset($item)): echo $item->item_content; else: echo $this->input->post('content'); endif;?></textarea>
+                <textarea id="wmd-input" class="wmd-input text_input" name="content"><?php if (!$_POST && isset($item)): echo $item->content; else: echo $this->input->post('content'); endif;?></textarea>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
                 <span class="option_container">
                     <span class="option"><input<?php if (!$_POST || $this->input->post('timestamp') == 'no_change'): ?> checked="checked"<?php endif; ?> type="radio" name="timestamp" value="no_change" id="radio_no_change" /> <label for="radio_no_change">No Change</label></span>
                     <span class="option"><input<?php if ($this->input->post('timestamp') == 'make_current'): ?> checked="checked"<?php endif; ?> type="radio" name="timestamp" value="make_current" id="radio_make_current" /> <label for="radio_make_current">Make Current Time</label></span>
-                    <?php if ($item->item_status == 'draft'): ?>
+                    <?php if ($item->status == 'draft'): ?>
                         <span class="option"><input<?php if ($this->input->post('timestamp') == 'make_current_publish'): ?> checked="checked"<?php endif; ?> type="radio" name="timestamp" value="make_current_publish" id="radio_make_current_publish" /> <label for="radio_make_current_publish">Make Current Time and Publish Now</label></span>
                     <?php endif; ?>
                 </span>
@@ -74,8 +74,8 @@
 <script type="text/javascript" src="/public/scripts/pagedown/Markdown.Editor.js"></script>
 <script type="text/javascript">
     (function () {
-        var converter1 = Markdown.getSanitizingConverter();
-        var editor1 = new Markdown.Editor(converter1);
+        var converter1 = Markdown.getSanitizingConverter(),
+            editor1 = new Markdown.Editor(converter1);
         editor1.run();
     })();
 </script>

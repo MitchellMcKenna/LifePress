@@ -11,15 +11,15 @@ class Twitter_com {
         $twitter_username = $twitter_username[3];
 
         // Remove username from front of posts
-        $item->item_title = trim(str_replace($twitter_username.':', '', $item->item_title));
+        $item->title = trim(str_replace($twitter_username.':', '', $item->item_title));
 
         // Filter out @replies (set as unpublished)
-        if (substr($item->item_title, 0, 1) == '@') {
-            $item->item_status = 'draft';
+        if (substr($item->title, 0, 1) == '@') {
+            $item->status = 'draft';
         }
 
         // Remove item_content as it's just the same as the title anyway
-        $item->item_content = '';
+        $item->content = '';
 
         return $item;
     }

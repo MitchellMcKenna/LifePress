@@ -8,7 +8,7 @@ class Slideshare_net {
     {
         // Overwrite item content with clean content
         $nice_content = $original->get_item_tags('http://search.yahoo.com/mrss/', 'content');
-        $item->item_content = $nice_content[0]['child']['http://search.yahoo.com/mrss/']['description'][0]['data'];
+        $item->content = $nice_content[0]['child']['http://search.yahoo.com/mrss/']['description'][0]['data'];
 
         $embed = $original->get_item_tags('http://slideshare.net/api/1', 'embed');
         $embed = $embed[0]['data'];
@@ -18,7 +18,7 @@ class Slideshare_net {
         $embed = str_replace(' style="margin:0px" width="425" height="355"', '', $embed);
         $embed = explode('object', $embed);
         $embed = '<object'.$embed[1].'object>';
-        $item->item_data['video'] = $embed;
+        $item->data['video'] = $embed;
 
         return $item;
     }
@@ -30,7 +30,7 @@ class Slideshare_net {
         $video = $item->get_video();
         $video = str_replace('355', $height, $video);
         $video = str_replace('425', $width, $video);
-        $item->item_data['video'] = $video;
+        $item->data['video'] = $video;
 
         return $item;
     }

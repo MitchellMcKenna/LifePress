@@ -4,28 +4,32 @@ class Youtube_com {
 
     // Sample class for youtube
 
-    function pre_db($item, $original)
+    function pre_db(Item $item, $original)
     {
         // If content is not automatically found, try to grab it from enclosure description
-        if (empty($item->item_content) && !empty($item->item_data['enclosures'][0]->description)) {
-		    $item->item_content	= $item->item_data['enclosures'][0]->description;
+        if (empty($item->content) && !empty($item->data['enclosures'][0]->description)) {
+		    $item->content	= $item->data['enclosures'][0]->description;
         }
 
         // If image is not automatically found, try to grab it from enclosure thumbnails
-        if (empty($item->item_data['image']) && !empty($item->item_data['enclosures'][0]->thumbnails[0])) {
-            $item->item_data['image'] = $item->item_data['enclosures'][0]->thumbnails[0];
+        if (empty($item->data['image']) && !empty($item->data['enclosures'][0]->thumbnails[0])) {
+            $item->data['image'] = $item->data['enclosures'][0]->thumbnails[0];
         }
 
         return $item;
     }
 
-    function pre_display($item)
+    function pre_display(Item $item)
     {
-        $link = $item->item_data['permalink'];
+
+        // var_dump($item);
+        // exit;
+
+        $link = $item->data['permalink'];
 		$link = str_replace('?v=', '/v/', $link);
 		$link = str_replace('watch/', '', $link);
 
-        $item->item_data['video'] = '<object width="212" height="178"><param name="movie" value="'.$link.'&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="'.$link.'&hl=en&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="212" height="178"></embed></object>';
+        $item->data['video'] = '<object width="212" height="178"><param name="movie" value="'.$link.'&hl=en&fs=1"></param><param name="allowFullScreen" value="true"></param><embed src="'.$link.'&hl=en&fs=1" type="application/x-shockwave-flash" allowfullscreen="true" width="212" height="178"></embed></object>';
         return $item;
     }
 }

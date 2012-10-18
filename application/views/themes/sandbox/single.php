@@ -2,14 +2,14 @@
 
 <div id="main_container">
     <div id="single_container">
-        <p class="site_info" style="background: transparent url(<?php echo $item->get_feed_icon()?>) 0 center no-repeat"><?php echo $this->lang->line('i_posted_to'); ?> <?php echo $item->get_feed_domain()?></p>
+        <p class="site_info" style="background: transparent url(<?php echo $item->feed->icon?>) 0 center no-repeat"><?php echo $this->lang->line('i_posted_to'); ?> <?php echo $item->feed->domain?></p>
 
-        <h2><?php echo $item->get_title()?></h2>
+        <h2><?php echo $item->title?></h2>
 
-        <p><a href="<?php echo $item->get_original_permalink()?>"><?php echo $item->get_original_permalink()?></a></p>
+        <p><a href="<?php echo $item->permalink?>"><?php echo $item->permalink?></a></p>
 
         <?php if ($item->has_content()): ?>
-            <div class="content"><?php echo $item->get_content()?></div>
+            <div class="content"><?php echo markdown($item->content) ?></div>
         <?php endif; ?>
 
         <?php if ($item->has_image() && !$item->has_video()): ?>

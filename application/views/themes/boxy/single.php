@@ -9,17 +9,17 @@
 
     <div id="single_container">
         <div id="single_header">
-            <h2><?php echo $item->get_title()?></h2>
+            <h2><?php echo $item->title?></h2>
             <p><?php echo $item->get_human_date()?></p>
         </div>
 
-        <?php if ($item->has_content()): ?>
-            <div id="single_content"><?php echo $item->get_content()?></div>
+        <?php if ($item->content): ?>
+            <div id="single_content"><?php echo $item->apply_markdown_filter() ?></div>
         <?php endif; ?>
 
         <?php if ($item->has_image() && !$item->has_video()): ?>
-            <?php if (isset($item->item_data[$item->get_feed_class()]['image']['m']) && !empty($item->item_data[$item->get_feed_class()]['image']['m'])): ?>
-                <p><img src="<?php echo $item->item_data[$item->get_feed_class()]['image']['m']?>" alt="" /></p>
+            <?php if (isset($item->data[$item->get_feed_class()]['image']['m']) && !empty($item->data[$item->get_feed_class()]['image']['m'])): ?>
+                <p><img src="<?php echo $item->data[$item->get_feed_class()]['image']['m']?>" alt="" /></p>
             <?php else: ?>
                 <p><img src="<?php echo $item->get_image()?>" alt="" /></p>
             <?php endif; ?>
@@ -44,8 +44,8 @@
             </ul>
         <?php endif; ?>
 
-        <?php if ($item->get_original_permalink()): ?>
-            <p id="original_permalink">Via: <span><a href="<?php echo $item->get_original_permalink()?>"><?php echo $item->get_original_permalink()?></a></span></p>
+        <?php if (!$item->is_blog_post() && $item->get_local_permalink()): ?>
+            <p id="original_permalink">Via: <span><a href="<?php echo $item->get_local_permalink()?>"><?php echo $item->get_local_permalink()?></a></span></p>
         <?php endif; ?>
     </div>
 

@@ -4,14 +4,14 @@
             <?php foreach($feeds as $feed): ?>
                 <li class="feed">
                     <ul class="feed_tools">
-                        <li class="feed_delete"><a class="confirm_first" href="<?php echo $this->config->item('base_url')?>admin/feeds/delete/<?php echo $feed->feed_id?>">x</a></li>
+                        <li class="feed_delete"><a class="confirm_first" href="<?php echo $this->config->item('base_url')?>admin/feeds/delete/<?php echo $feed->id?>">x</a></li>
                     </ul>
 
-                <p class="title" style="background-image: url(<?php echo $feed->feed_icon?>)"><?php echo $feed->feed_title?></p>
+                <p class="title" style="background-image: url(<?php echo $feed->icon?>)"><?php echo $feed->title?></p>
 
-                <p class="permalink"><a href="<?php echo $feed->feed_url?>" rel="external"><?php echo $feed->feed_url?></a></p>
+                <p class="permalink"><a href="<?php echo $feed->url?>" rel="external"><?php echo $feed->url?></a></p>
 
-                <p class="item_count"><?php echo $feed->item_count?> items</p>
+                <p class="item_count"><?php echo /*$feed->item_count*/ '';?> items</p>
             </li>
             <?php endforeach; ?>
         </ul>
