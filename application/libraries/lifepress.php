@@ -353,7 +353,7 @@ class Lifepress {
             } elseif ($type == 'tag') {
                 $data->page_name = 'Items Tag';
 
-                $this->CI->page->SetItemCount($this->CI->item_model->count_items_by_search($query, $public));
+                $this->CI->page->SetItemCount($this->CI->item_model->count_items_by_tag($query, $public));
                 $this->CI->page->SetLinksHref($this->CI->config->item('base_url').$admin.'items/tag/'.$query.'/');
 
                 $data->items = $this->CI->item_model->get_items_by_tag($this->CI->page->GetOffset(), $this->CI->page->GetSqlLimit(), $query, $public);
