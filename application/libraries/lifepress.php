@@ -99,7 +99,7 @@ class Lifepress {
 
             // Build out clean item
             $new->item_status = 'publish';
-            $new->item_date = strtotime($item->get_date());
+            $new->item_date = $item->get_date('U');
             $new->item_title = $this->CI->security->xss_clean(trim(strip_tags($item->get_title())));
             $new->item_permalink = $item->get_permalink();
             $new->item_content = $this->CI->security->xss_clean(trim(strip_tags($item->get_content())));
