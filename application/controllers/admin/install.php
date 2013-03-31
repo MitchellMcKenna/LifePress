@@ -62,6 +62,7 @@ class Install extends CI_Controller {
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+        $data = new StdClass();
 
         if ($this->form_validation->run() !== FALSE) {
             $this->load->library('migration');
@@ -87,6 +88,7 @@ class Install extends CI_Controller {
             $username = $this->input->post('username', TRUE);
             $password = substr(md5(time().rand(1,100).$this->input->post('lifestream_title', TRUE)), 0, 8);
 
+            $user = new StdClass();
             $user->user_login = $username;
             $user->user_pass = md5($password);
             $user->user_email = $this->input->post('email', TRUE);
