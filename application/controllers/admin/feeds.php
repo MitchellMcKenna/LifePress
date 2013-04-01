@@ -52,6 +52,7 @@ class Feeds extends MY_Auth_Controller {
 
     public function index()
     {
+        $data = new StdClass();
         $data->page_name = 'Feeds';
 
         $data->feeds = $this->feed_model->get_active_feeds(TRUE);
@@ -63,6 +64,7 @@ class Feeds extends MY_Auth_Controller {
 
     public function add()
     {
+        $data = new StdClass();
         $data->page_name = 'Add Feed';
 
         $this->form_validation->set_rules('url', 'Url', 'trim|prep_url|required|xss_clean|callback_test_feed');

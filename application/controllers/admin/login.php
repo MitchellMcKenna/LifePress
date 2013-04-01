@@ -86,6 +86,7 @@ class Login extends MY_Controller {
     }
 
     function forgot() {
+        $data = new StdClass();
         $data->page_name = 'Password Reset';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
