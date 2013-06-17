@@ -46,6 +46,8 @@ class Login extends MY_Controller {
         parent::__construct();
 
         $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+
 
         if (!$this->data->user === FALSE) {
             header('Location: '.$this->config->item('base_url').'admin');
@@ -85,11 +87,8 @@ class Login extends MY_Controller {
         $data->page_name = 'Password Reset';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
-            $this->load->library('form_validation');
-            $rules['email']	= "required|trim|valid_email|callback__is_admin_email";
-            $this->form_validation->set_rules($rules);
+            $this->form_validation->set_rules('email', 'Email', "required|trim|valid_email|callback__is_admin_email");
             if ($this->form_validation->run() == FALSE) {
-                $data->errors = $this->form_validation->error_string;
                 $this->load->view('admin/forgot', $data);
             } else {
                 // Change activation key and send a mail

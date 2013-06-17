@@ -1,13 +1,9 @@
 <div id="main_content">
-    <?php if (isset($errors)): ?>
-        <div class="error">
-            <?php echo $errors; ?>
-        </div>
-    <?php endif; ?>
+    <?php echo validation_errors(); ?>
 
     <?php if (isset($success)): ?>
         <div class="success">
-            Instructions have been sent to your email acount.
+            Instructions have been sent to your email account.
         </div>
     <?php endif; ?>
 
