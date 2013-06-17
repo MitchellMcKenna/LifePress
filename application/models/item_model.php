@@ -225,7 +225,7 @@ class Item_model extends CI_Model {
 
         return $this->db
             ->join('tag_relationships', 'items.ID = tag_relationships.item_id')
-            ->join('tags', 'tags.tag_id = tag_relationships.tag_id', 'left outer')
+            ->join('tags', 'tags.tag_id = tag_relationships.tag_id')
             ->get_where('items', $where)
             ->num_rows();
     }
