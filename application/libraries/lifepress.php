@@ -45,7 +45,7 @@ class Lifepress {
     function __construct()
     {
         $this->CI =& get_instance();
-        $this->CI->config->set_item('lifepress_version', '0.2');
+        $this->CI->config->set_item('lifepress_version', '0.3');
     }
 
     function fetch_items()
