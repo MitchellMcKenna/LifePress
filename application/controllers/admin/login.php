@@ -55,13 +55,17 @@ class Login extends MY_Controller {
     }
 
     function index() {
+        $data = new StdClass();
         $data->page_name = 'Login';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
             $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
-            $rules['username']	= "required|trim";
-            $rules['password']	= "required|trim";
+            $rules = array(
+                array('field' => 'username', 'rules' => 'required|trim'),
+                array('field' => 'password', 'rules' => 'required|trim')
+            );
+
             $this->form_validation->set_rules($rules);
 
             if ($this->form_validation->run() == FALSE) {
@@ -84,6 +88,7 @@ class Login extends MY_Controller {
     }
 
     function forgot() {
+        $data = new StdClass();
         $data->page_name = 'Password Reset';
         $this->load->view('admin/_header', $data);
         if ($_POST) {

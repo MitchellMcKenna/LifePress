@@ -1,4 +1,4 @@
-<? defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * LifePress - Lifestream software built on the CodeIgniter PHP framework.
  * Copyright (c) 2012, Mitchell McKenna <mitchellmckenna@gmail.com>
@@ -184,7 +184,7 @@ class Migration_Install_Lifepress extends CI_Migration {
         $this->dbforge->create_table('tag_relationships');
 
         // Create the users table
-        $this->dbforge->add_field(array( 
+        $this->dbforge->add_field(array(
             'ID' => array(
                 'type' => 'BIGINT',
                 'constraint' => 20,
