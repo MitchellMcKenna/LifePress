@@ -54,11 +54,14 @@ class Options extends MY_Auth_Controller {
         $this->load->helper('file');
         $this->load->helper('inflector');
 
+        $data = new StdClass();
         $data->page_name = 'Options';
 
         $theme_folder = get_dir_file_info('application/views/themes', FALSE, TRUE);
 
+        $themes = array();
         foreach ($theme_folder as $key => $value) {
+            $themes[$key] = new StdClass();
             $themes[$key]->folder = $key;
             $themes[$key]->name = humanize($key);
         }

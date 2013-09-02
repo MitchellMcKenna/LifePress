@@ -51,6 +51,10 @@ class Write extends MY_Auth_Controller {
 
     function index()
     {
+        $data = new StdClass();
+        $data->page_name = 'Write';
+        $new_post = new StdClass();
+
         if ($this->uri->segment(3) == 'edit') {
             if ($this->input->post('referer')) {
                 $data->referer = $this->input->post('referer');
@@ -72,8 +76,6 @@ class Write extends MY_Auth_Controller {
 
             $new_post->item_data = $data->item->item_data;
         }
-
-        $data->page_name = 'Write';
 
         if ($_POST) {
             $this->form_validation->set_rules('title', 'Title', 'trim|required|xss_clean');

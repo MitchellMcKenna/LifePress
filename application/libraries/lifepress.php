@@ -88,6 +88,7 @@ class Lifepress {
     function add_new_items($items, $feed)
     {
         foreach ($items as $item) {
+            $new = new StdClass();
             $new->item_data = array();
             $new->item_data['title'] = $item->get_title();
             $new->item_data['permalink'] = $item->get_permalink();
@@ -253,6 +254,7 @@ class Lifepress {
             $item_id = explode('?', $item_id);
             $item_id = $item_id[0];
 
+            $data = new StdClass();
             $data->item = $this->CI->item_model->get_public_item_by_id($item_id);
             $data->page_name = $data->item->get_title();
             $data->popular_tags = $this->CI->tag_model->get_all_tags('count', 50);
@@ -283,6 +285,7 @@ class Lifepress {
             exit();
         }
 
+        $data = new StdClass();
         $data->blog_posts = $this->CI->item_model->get_items_by_feed_domain(0, 10, 'lifepress', $public);
         $data->active_feeds = $this->CI->feed_model->get_active_feed_domains();
         $data->popular_tags = $this->CI->tag_model->get_all_tags('count', 50);

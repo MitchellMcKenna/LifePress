@@ -55,13 +55,17 @@ class Login extends MY_Controller {
     }
 
     function index() {
+        $data = new StdClass();
         $data->page_name = 'Login';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
             $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
-            $rules['username']	= "required|trim";
-            $rules['password']	= "required|trim";
+            $rules = array(
+                array('field' => 'username', 'rules' => 'required|trim'),
+                array('field' => 'password', 'rules' => 'required|trim')
+            );
+
             $this->form_validation->set_rules($rules);
 
             if ($this->form_validation->run() == FALSE) {
@@ -84,6 +88,7 @@ class Login extends MY_Controller {
     }
 
     function forgot() {
+        $data = new StdClass();
         $data->page_name = 'Password Reset';
         $this->load->view('admin/_header', $data);
         if ($_POST) {
@@ -93,6 +98,7 @@ class Login extends MY_Controller {
             } else {
                 // Change activation key and send a mail
                 $key = substr(md5(time().rand(1,100)),0,10);
+                $user = new stdClass();
                 $user->user_activation_key = $key;
                 $this->db->update('users', $user, array('user_email' => $this->input->post('email', TRUE)));
                 $link = $this->config->item('base_url').'admin/login/reset_password/'.$key;
@@ -128,6 +134,7 @@ If you feel you have received this message in error, ignore this message and do 
         if ($user = $this->db->get_where('users', array('user_activation_key' => $key))->row()) {
             // Reset the activation key
             $key = substr(md5(time().rand(1,100)),0,10);
+            $edited = new stdClass();
             $edited->user_activation_key = $key;
 
             // Reset users password

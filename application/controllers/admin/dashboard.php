@@ -49,6 +49,7 @@ class Dashboard extends MY_Auth_Controller {
 
     function index()
     {
+        $data = new StdClass();
         $data->page_name = 'Dashboard';
         $data->item_count = $this->item_model->count_all_items(TRUE);
         $data->feed_count = $this->feed_model->count_active_feeds();
