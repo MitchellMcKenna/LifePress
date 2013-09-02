@@ -6,11 +6,11 @@
         <language>en-us</language>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>LifePress</generator>
-        <webMaster><?php echo $this->config->item('admin_email')?></webMaster>
+        <webMaster><?php echo $this->config->item('admin_email'); ?></webMaster>
         <?php foreach ($items as $item): ?>
             <item>
-                <title><?php echo $item->get_title()?></title>
-                <link><?php echo $item->get_permalink()?>/<?php echo $item->get_name()?></link>
+                <title><?php echo $item->get_title(); ?></title>
+                <link><?php echo $item->get_permalink(); ?></link>
                 <description><![CDATA[<div><?php echo $item->get_content()?>
                 <?php if ($item->has_image() && !$item->has_video()): ?>
                     <img src="<?php echo $item->get_image()?>" alt="" />

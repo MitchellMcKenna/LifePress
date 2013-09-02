@@ -47,20 +47,17 @@ class Tag_model extends CI_Model {
         parent::__construct();
     }
 
-    function _process($tags)
+    function get_all_tags($order_by = 'name', $limit = 10000)
     {
-        return $tags;
-    }
-
-    function get_all_tags($orderby = 'name', $limit = 10000)
-    {
-        $tags = $this->_process($this->db->limit($limit)->order_by($orderby, 'desc')->get('tags')->result());
-
-        if ($tags) {
-            return $tags;
-        } else {
-            return array();
-        }
+        return $this->db->select('tags.tag_id, tags.name, tags.slug, count(tags.tag_id) AS count')
+            ->from('tags')
+            ->join('tag_relationships', 'tags.tag_id = tag_relationships.tag_id')
+            ->join('items', 'tag_relationships.item_id = items.ID AND items.item_status = "publish"')
+            ->group_by('tags.tag_id')
+            ->order_by($order_by, 'desc')
+            ->limit($limit)
+            ->get()
+            ->result();
     }
 }
 

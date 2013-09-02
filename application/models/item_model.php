@@ -71,7 +71,7 @@ class Item_model extends CI_Model {
 
                 $new_item->item_title = $this->_autolink($items[$key]->item_title);
                 $new_item->item_original_permalink = $items[$key]->item_permalink;
-                $new_item->item_permalink = $this->config->item('base_url').'items/view/'.$new_item->ID;
+                $new_item->item_permalink = site_url(array('post', $new_item->ID, $items[$key]->item_name));
                 $new_item->item_status = $items[$key]->item_status;
                 $new_item->item_name = $items[$key]->item_name;
                 $new_item->item_data = unserialize($items[$key]->item_data);
@@ -225,8 +225,8 @@ class Item_model extends CI_Model {
 
         return $this->db
             ->join('tag_relationships', 'items.ID = tag_relationships.item_id')
-            ->join('tags', 'tags.tag_id = tag_relationships.tag_id', 'left outer')
-            ->getwhere('items', $where)
+            ->join('tags', 'tags.tag_id = tag_relationships.tag_id')
+            ->get_where('items', $where)
             ->num_rows();
     }
 
@@ -344,36 +344,40 @@ class Item_model extends CI_Model {
 
     function tag_item($tags = array(), $item_id = NULL)
     {
+        // Nuke all item tags from orbit. It's the only way to be sure.
         $this->db->delete('tag_relationships', array('item_id' => $item_id));
 
-        // Nuke all item tags from orbit. It's the only way to be sure.
         $this->clean_tags();
 
-        if (isset($tags[0])) {
+        if (!empty($tags)) {
             foreach ($tags as $tag) {
                 // Lets just get rid of some typical meh stuff from tags
                 $disallow = array('(',')',',','.','*','\'','"','|');
-                $tag = $this->security->xss_clean(str_replace($disallow,'',$tag));
+                $name = $this->security->xss_clean(str_replace($disallow,'',$tag));
 
-                $slug = url_title($tag);
+                $slug = url_title($name);
 
                 // For unicode characters the slug might be blank, so...
                 if ($slug == '') {
-                    $slug = urlencode($tag);
-                }
-
-                if (!$this->db->get_where('tags', array('slug' => $slug))->row()) {
-                    $new->name = $tag;
-                    $new->slug = $slug;
-                    $this->db->insert('tags', $new);
+                    $slug = urlencode($name);
                 }
 
                 $tag = $this->db->get_where('tags', array('slug' => $slug))->row();
 
-                $criteria = array('tag_id' => $tag->tag_id, 'item_id' => $item_id);
+                if (empty($tag)) {
+                    $tag = new stdClass();
+                    $tag->name = $name;
+                    $tag->slug = $slug;
 
-                if (!$this->db->get_where('tag_relationships', $criteria)->row()) {
-                    $this->db->insert('tag_relationships', $criteria);
+                    $this->db->insert('tags', $tag);
+
+                    $tag->tag_id = $this->db->insert_id();
+                }
+
+                $tag_relationship = array('tag_id' => $tag->tag_id, 'item_id' => $item_id);
+
+                if (!$this->db->get_where('tag_relationships', $tag_relationship)->row()) {
+                    $this->db->insert('tag_relationships', $tag_relationship);
                 }
 
                 // Update tag count

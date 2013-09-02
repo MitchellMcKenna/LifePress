@@ -84,14 +84,16 @@ class Items extends MY_Controller {
         }
     }
 
-    function view($item_id = NULL)
+    function view($item_id, $slug)
     {
-        if ($item_id) {
-            $this->lifepress->get_single_item_page($item_id);
-        } else {
-            redirect('/', 'refresh');
-        }
+        redirect('post/' . $item_id . '/' . $slug, 'location', 301);
     }
+
+    public function post($item_id)
+    {
+        $this->lifepress->get_single_item_page($item_id);
+    }
+
 
 }
 
