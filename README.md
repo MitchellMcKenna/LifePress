@@ -1,6 +1,6 @@
 # LifePress
 
-LifePress is an open source self-hosted lifestreaming platform built on the [CodeIgniter](http://codeigniter.com/) PHP framework. LifePress is a fork of the great, but no longer supported, [Sweetcron](https://code.google.com/p/lifepress/) software by Yong Fook. 
+LifePress is an open source self-hosted lifestreaming platform built on the [CodeIgniter](http://codeigniter.com/) PHP framework. LifePress is a fork of the great, but no longer supported, [Sweetcron](https://code.google.com/p/sweetcron/) software by Yong Fook. 
 
 ## What Has Changed
 
@@ -59,17 +59,17 @@ Plugin file names must be the website's url for the feed it was built for, repla
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Youtube_com {
-﻿  function pre_db($item)
-﻿  {
-    $item->item_status = 'draft';
-﻿  ﻿  return $item;
-﻿  }
-﻿  
-﻿  function pre_display($item)
-﻿  {
-    $item->item_data['video'] = '<iframe width="640" height="360" src="' . $item->item_data['permalink'] . '"></iframe>';
-﻿  ﻿  return $item;
-﻿  }
+    function pre_db($item)
+    {
+        $item->item_status = 'draft';
+        return $item;
+    }
+
+    function pre_display($item)
+    {
+        $item->item_data['video'] = '<iframe width="640" height="360" src="' . $item->item_data['permalink'] . '"></iframe>';
+        return $item;
+    }
 }
 ?>
 ```
@@ -104,6 +104,30 @@ You can store completely custom data by simply adding to the `item_data` array:
 ```
 $item->item_data['foo'] = 'bar';
 ```
+
+## Themes
+
+Themes can be found in ```application/views/themes```.
+
+### Creating a Theme
+
+The simplest way to create a new theme is to copy the sandbox theme folder and rename it to your desired theme name. Folder names cannot contain spaces. Once you create a new folder in the themes folder, it becomes available as a selectable theme in the admin dashboard.
+
+A theme folder should always contain these files:
+
+    _activity_feed.php //the main activity list of your theme
+    _header.php //the header of your site
+    _footer.php //the footer of your site
+    _sidebar.php //the sidebar of your site
+    home.php //the index page of your site
+    items.php //the item page of your site (search / tag results)
+    single.php //the single item view page
+    rss_feed.php //formatting for the rss feed
+    main.css //the css for your site
+
+#### Displaying Imported Items
+
+For your site's index page and item pages, an $items object is provided to the theme templates. See the _activity_feed.php file in the sandbox and boxy themes for examples on how to loop through $items and customize them based on feed they came from.
 
 #### Easily Access Media In Your Themes
 
