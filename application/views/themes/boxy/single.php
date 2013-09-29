@@ -1,11 +1,5 @@
 <div id="main_container">
-    <?php if (isset($_SERVER['HTTP_REFERER'])):
-        $backlink = $_SERVER['HTTP_REFERER'];
-    else:
-        $backlink = $this->config->item('base_url');
-    endif; ?>
-
-    <p id="breadcrumb"><a href="<?php echo $backlink?>">&laquo; Back To Lifestream</a></p>
+    <p id="breadcrumb"><a href="<?php echo $this->config->item('base_url')?>">&laquo; Back To Lifestream</a></p>
 
     <div id="single_container">
         <div id="single_header">
