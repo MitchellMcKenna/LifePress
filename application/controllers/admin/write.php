@@ -56,11 +56,7 @@ class Write extends MY_Auth_Controller {
         $new_post = new StdClass();
 
         if ($this->uri->segment(3) == 'edit') {
-            if ($this->input->post('referer')) {
-                $data->referer = $this->input->post('referer');
-            } else {
-                $data->referer = $_SERVER['HTTP_REFERER'];
-            }
+            $data->referer = $this->config->item('base_url') . 'admin';
 
             $data->editing = TRUE;
 
