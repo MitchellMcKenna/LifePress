@@ -347,7 +347,9 @@ class Item_model extends CI_Model {
         // Nuke all item tags from orbit. It's the only way to be sure.
         $this->db->delete('tag_relationships', array('item_id' => $item_id));
 
-        $this->clean_tags();
+        // Disabled due to php memory exceeded when a lot of tags exists
+        // TODO:: Find a more effectiant way of cleaning up tags.
+        //$this->clean_tags();
 
         if (!empty($tags)) {
             foreach ($tags as $tag) {
