@@ -75,6 +75,7 @@ class Feeds extends MY_Auth_Controller {
                 'feed_title' => $this->simplepie->get_title(),
                 'feed_icon' => $this->simplepie->get_favicon(),
                 'feed_url' => $this->input->post('url', TRUE),
+                'feed_data' => '',
                 'feed_status' => 'active'
             );
 
