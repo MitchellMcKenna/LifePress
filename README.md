@@ -1,10 +1,10 @@
 # LifePress
 
-LifePress is an open source self-hosted lifestreaming platform built on the [CodeIgniter](http://codeigniter.com/) PHP framework. LifePress is a fork of the great, but no longer supported, [Sweetcron](https://code.google.com/p/sweetcron/) software by Yong Fook. 
+LifePress is an open source self-hosted lifestreaming platform built on the [CodeIgniter](http://codeigniter.com/) PHP framework. LifePress is a fork of the great, but no longer supported, [Sweetcron](https://code.google.com/p/sweetcron/) software by Yong Fook.
 
 ## What Has Changed
 
-LifePress has been rewritten to work on CodeIgniter 3.0. Sweetcron was written on CI 1.6. LifePress is still backwards compatible with Sweetcron (see upgrading); the database schema and plugins/theme architecture are still the same. A lot of the code has been cleaned up to meet CI coding standards. For more info see the commit logs.
+LifePress has been rewritten to work on CodeIgniter 2.1. Sweetcron was written on CI 1.6. LifePress is still backwards compatible with Sweetcron (see upgrading); the database schema and plugins/theme architecture are still the same. A lot of the code has been cleaned up to meet CI coding standards. For more info see the commit logs.
 
 ## Installation
 
@@ -25,11 +25,11 @@ If you want LifePress in a sub folder (e.g. example.com/lifestream/), you will n
 
 ### Pseudo Cron vs Cron Job
 
-LifePress can import items from your feeds either through Pseudo Cron (default) or a cron job (preferred). If you wish to use a cron job you will need to set up a manual cron job with your hosting provider. The options panel provides a switch between both and provides the url you will have to curl if you use a cron job. 
+LifePress can import items from your feeds either through Pseudo Cron (default) or a cron job (preferred). If you wish to use a cron job you will need to set up a manual cron job with your hosting provider. The options panel provides a switch between both and provides the url you will have to curl if you use a cron job.
 
 **Pseudo Cron** - zero configuration. The only disadvantage is that once every 30 minutes, one visitor to your website may experience a slow load time as they will have triggered the automatic import.
 
-**Cron Job** - you will need to set up a manual cron job on your server. The advantage is that updates happen without any user ever knowing (i.e. no slowdowns). The other advantage is that you can increase how frequently LifePress imports new items. 
+**Cron Job** - you will need to set up a manual cron job on your server. The advantage is that updates happen without any user ever knowing (i.e. no slowdowns). The other advantage is that you can increase how frequently LifePress imports new items.
 
 ## Upgrading
 
@@ -49,7 +49,7 @@ There are two "hooks" - functions where we can manipulate feed data:
 * At import using `pre_db()` - before the item is put into the database.
 * At display using `pre_display()` - before the item is rendered in a user's browser.
 
-It's best to make your changes in `pre_display()` when possible, because `pre_db()` makes permanent changes to the data as it gets stored to the db. At import is suitable for making tweaks to data that we know we want to be permanent, like stripping out unwanted data, or setting certain items to "draft" status. At display is suitable for simple tweaks to the available data, like the youtube plugin setting `$item->item_data['video']` based on the youtube link in the item. 
+It's best to make your changes in `pre_display()` when possible, because `pre_db()` makes permanent changes to the data as it gets stored to the db. At import is suitable for making tweaks to data that we know we want to be permanent, like stripping out unwanted data, or setting certain items to "draft" status. At display is suitable for simple tweaks to the available data, like the youtube plugin setting `$item->item_data['video']` based on the youtube link in the item.
 
 ### Creating a plugin
 
@@ -94,8 +94,8 @@ $item->item_data['title'] //raw title before it was cleaned for $item->item_titl
 $item->item_data['permalink'] //raw permalink of item
 $item->item_data['content'] //raw content
 $item->item_data['enclosures'] //data found in the item's rss "enclosure" section
-$item->item_data['categories'] //data found in the item's rss "categories" section﻿  
-$item->item_data['tags'] //tags LifePress was able to associate with the item﻿  
+$item->item_data['categories'] //data found in the item's rss "categories" section﻿
+$item->item_data['tags'] //tags LifePress was able to associate with the item﻿
 $item->item_data['image'] //image that LifePress was able to associate with the item
 ```
 
