@@ -4,7 +4,7 @@ LifePress is an open source self-hosted lifestreaming platform built on the [Cod
 
 ## What Has Changed
 
-LifePress has been rewritten to work on CodeIgniter 3.0. Sweetcron was written on CI 1.6. LifePress is still backwards compatible with Sweetcron (see upgrading); the database schema and plugins/theme architecture are still the same. A lot of the code has been cleaned up to meet CI coding standards. For more info see the commit logs.
+LifePress has been rewritten to work on CodeIgniter 2.1. Sweetcron was written on CI 1.6. LifePress is still backwards compatible with Sweetcron (see upgrading); the database schema and plugins/theme architecture are still the same. A lot of the code has been cleaned up to meet CI coding standards. For more info see the commit logs.
 
 ## Installation
 
