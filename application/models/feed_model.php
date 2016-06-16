@@ -107,11 +107,18 @@ class Feed_model extends CI_Model {
      */
     public function get_active_feed_domains()
     {
-        return $this->db
+        $rows = $this->db
             ->select('feed_domain, feed_icon')
-            ->group_by('feed_domain')
+            ->distinct()
             ->get_where('feeds', array('feed_status' => 'active'))
             ->result();
+
+        $result_map = [];
+        foreach ($rows as $data) {
+            $result_map[$data->feed_domain] = $data;
+        }
+
+        return array_values($result_map);
     }
 
     /**
