@@ -131,7 +131,14 @@ class Write extends MY_Auth_Controller {
 
                     if ($this->input->post('draft') == 'true') {
                         $new_post->item_status = 'draft';
+                    } else {
+                        $new_post->item_status = 'publish';
                     }
+
+                    // Set the permalink to blank for new items
+                    $new_post->item_permalink = '';
+                    // Set the item feed to 0 for new items
+                    $new_post->item_feed_id = 0;
 
                     $this->item_model->add_blog_post($new_post);
 
